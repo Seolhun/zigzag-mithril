@@ -3,6 +3,22 @@ var m = require("mithril")
 
 var User = {
 	list: [],
+	// controller: function () {
+	// 	var ctrl = this,
+	// 		data = [
+	// 			{id: 1, name: "John"},
+	// 			{id: 2, name: "Mary"},
+	// 			{id: 3, name: "Seniqua"}
+	// 		];
+	//
+	// 	ctrl.data = data;
+	// 	//  Has to use a prop for the current user
+	// 	ctrl.currentUser = m.prop(data[1]);
+	// 	ctrl.changeUser = function (id) {
+	// 		console.log(id);
+	// 	};
+	// },
+
 	loadList: function () {
 		return m.request({
 			method: "GET",
