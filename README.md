@@ -52,6 +52,10 @@ m.render(document.body, "hello world")
 ```
 
 ---
+### []TypeScript](https://github.com/MithrilJS/mithril.d.ts)
+
+
+---
 ### LifeCycle
 - oninit
     - The oninit(vnode) hook is called before a vnode is touched by the virtual DOM engine. oninit is guaranteed to run before its DOM element is attached to the document, and it is guaranteed to run on parent vnodes before their children, but it does not offer any guarantees regarding the existence of ancestor or descendant DOM elements. You should never access the vnode.dom from the oninit method.
