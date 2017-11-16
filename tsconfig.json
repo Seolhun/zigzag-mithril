@@ -1,20 +1,21 @@
-
+// Reference : https://www.typescriptlang.org/docs/handbook/compiler-options.html
 {
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "baseUrl": "src/",
-        "rootDir": "src/",
-        "outDir": "dist/",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "removeComments": true,
-        "pretty": true,
-        "newLine": "LF"
+      "moduleResolution": "node"
     },
-    "exclude": [
-        "node_modules"
-    ]
+    "baseUrl": "src",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "charset": "UTF8",
+    "jsx": "react",
+    "jsxFactory": "m",
+    "watch": true
+  }
 }

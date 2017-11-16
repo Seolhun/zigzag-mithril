@@ -1,40 +1,17 @@
-# Created by .ignore support plugin (hsz.mobi)
 ### Node template
 # Logs
 logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Dependency directories
 node_modules/
-jspm_packages/
+### Node Build
+dist
 
-### macOS template
 # General
 .DS_Store
-.AppleDouble
-.LSOverride
 
 ### JetBrain
-# User-specific stuff:
 .idea
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
-
-# Sensitive or high-churn files:
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.xml
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-
-# Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
 
 
