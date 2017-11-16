@@ -19,8 +19,8 @@ let User = {
       url: 'https://rem-rest-api.herokuapp.com/api/users/' + id,
       withCredentials: true
     }).then(function (result) {
-        User.current = result
-      })
+      User.current = result
+    })
   }
 }
 

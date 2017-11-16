@@ -1,21 +1,21 @@
+// Reference : https://www.typescriptlang.org/docs/handbook/compiler-options.html
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "lib": ["dom", "es2015"],
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "preserveConstEnums": true,
-    "removeComments": false,
-    "noLib": false,
-    "declaration": false,
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "compilerOptions": {
+      "moduleResolution": "node"
+    },
+    "baseUrl": "src",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
     "sourceMap": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
-    "files": ["index.ts"]
-  },
-  "atom": {
-    "rewriteTsconfig": false
+    "charset": "UTF8",
+    "jsx": "react",
+    "jsxFactory": "m",
+    "watch": true
   }
 }

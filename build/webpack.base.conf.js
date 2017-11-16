@@ -6,6 +6,8 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
   entry: {
     app: './src/index.js'
@@ -18,7 +20,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.ts', '.json'],
+    extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
       '@': resolve('src'),
       'assets': path.resolve('src/assets'),
@@ -29,19 +31,28 @@ module.exports = {
 
   module: {
     rules: [
+      // {
+      //   test: /\.(js)$/,
+      //   loader: 'eslint-loader',
+      //   enforce: 'pre',
+      //   include: [resolve('src'), resolve('test')],
+      //   options: {
+      //     formatter: require('eslint-friendly-formatter')
+      //   }
+      // },
       {
-        test: /\.(js|ts)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      }, {
-        test: /\.(js|ts)$/,
+        test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
       }, {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader',
+        exclude: /node_modules/
+      }, {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('css-loader')
+      },
+      {
         test: /\.scss$/,
         use: [{
           loader: 'style-loader' // creates style nodes from JS strings
@@ -83,5 +94,10 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new ExtractTextPlugin({
+      filename: '[name].css'
+    })
+  ]
 }
