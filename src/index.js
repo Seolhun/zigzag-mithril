@@ -6,7 +6,7 @@ require("./assets/scss/global.scss");
 // import styles = require('./assets/scss/user/user.scss')
 var styles = require("./assets/scss/user/user.scss");
 // let Stream = require('mithril/stream')
-var App = (function () {
+var App = /** @class */ (function () {
     function App() {
     }
     App.prototype.view = function () {

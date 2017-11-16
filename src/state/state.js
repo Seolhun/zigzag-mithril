@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = require("mithril");
-var MyComponent = (function () {
+var MyComponent = /** @class */ (function () {
     function MyComponent() {
         this.count = 0;
     }
