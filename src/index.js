@@ -1,11 +1,11 @@
 // index.js
 // Common Config
-var m = require("mithril")
-var Router = require("./router/route")
+let m = require('mithril')
+require('./router/route')
+require('./assets/scss/global.scss')
 
 // Components
-var MyComponent = require("./components/mycomponent")
-
+// let MyComponent = require('./components/mycomponent')
 
 // m.mount(document.getElementById('sub-main'), MyComponent)
-m.render(document.getElementById("hello"), "Hello Mithril.js")
+m.render(document.getElementById('hello'), 'Hello Mithril.js')

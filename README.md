@@ -16,7 +16,7 @@
 - $ mkdir src
 - $ touch index.js
 ```javascript
-// index.js
+index.js
 var m = require("mithril")
 
 m.render(document.body, "hello world")
@@ -29,7 +29,7 @@ m.render(document.body, "hello world")
 {
     "name": "my-project-name",
     "scripts": {
-        "start": "webpack src/index.js bin/app.js -d --watch"
+        "start": index.js
     }
 }
 ```
