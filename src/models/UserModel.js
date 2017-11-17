@@ -8,19 +8,18 @@ var userModel = {
             method: 'GET',
             url: 'https://rem-rest-api.herokuapp.com/api/users',
             withCredentials: true
-        })
-            .then(function (result) {
+        }).then(function (result) {
             userModel.list = result.data;
         });
     },
+    // Current User
     current: {},
-    load: function (id) {
+    getById: function (id) {
         return m.request({
             method: 'GET',
             url: 'https://rem-rest-api.herokuapp.com/api/users/' + id,
             withCredentials: true
-        })
-            .then(function (result) {
+        }).then(function (result) {
             userModel.current = result;
         });
     },

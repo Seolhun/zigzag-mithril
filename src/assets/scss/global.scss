@@ -13,7 +13,6 @@ body, .input, .button {
 .user-list-item {
   background: #fafafa;
   border: 1px solid #ddd;
-  color: #333;
   display: block;
   margin: 0 0 1px;
   padding: 8px 15px;
@@ -30,6 +29,7 @@ body, .input, .button {
 }
 
 .input {
+  color: black;
   border: 1px solid #ddd;
   border-radius: 3px;
   box-sizing: border-box;
@@ -43,7 +43,6 @@ body, .input, .button {
   background: #eee;
   border: 1px solid #ddd;
   border-radius: 3px;
-  color: #333;
   display: inline-block;
   margin: 0 0 10px;
   padding: 10px 15px;

@@ -9,8 +9,8 @@ class Zigzag implements m.ClassComponent<{}> {
       <div class={'container'}>
         <div class={'row'}>
           <div class={'col-sm-12'}>
-          <h1>ZIGZAG app using mithril.js</h1>
-          <p>Local Css</p>
+            <h1>ZIGZAG app using mithril.js</h1>
+            <p>Local Css</p>
           </div>
         </div>
       </div>

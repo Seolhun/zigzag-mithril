@@ -13,22 +13,21 @@ const userModel = {
       method: 'GET',
       url: 'https://rem-rest-api.herokuapp.com/api/users',
       withCredentials: true
+    }).then(result => {
+      userModel.list = result.data
     })
-      .then(result => {
-        userModel.list = result.data
-      })
   },
 
+  // Current User
   current: {} as User,
-  load(id: number) {
+  getById(id: number) {
     return m.request<User>({
       method: 'GET',
       url: 'https://rem-rest-api.herokuapp.com/api/users/' + id,
       withCredentials: true
+    }).then(result => {
+      userModel.current = result
     })
-      .then(result => {
-        userModel.current = result
-      })
   },
 
   save() {
