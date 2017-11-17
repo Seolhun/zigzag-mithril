@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var m = require("mithril");
-require("./router/route");
-require("./assets/scss/global.scss");
-// import styles = require('./assets/scss/user/user.scss')
-var styles = require("./assets/scss/user/user.scss");
-// let Stream = require('mithril/stream')
-var App = /** @class */ (function () {
-    function App() {
+require("router/Router");
+require("assets/scss/global.scss");
+var Header_1 = require("components/layout/Header");
+var Zigzag = /** @class */ (function () {
+    function Zigzag() {
     }
-    App.prototype.view = function () {
-        return m("div", { class: styles.message }, "Hello Mithril with JSX");
+    Zigzag.prototype.view = function () {
+        return (m("div", { class: 'container' },
+            m("div", { class: 'row' },
+                m("div", { class: 'col-sm-12' },
+                    m("h1", null, "ZIGZAG app using mithril.js"),
+                    m("p", null, "Local Css")))));
     };
-    return App;
+    return Zigzag;
 }());
 // Components
-// let MyComponent = require('./components/mycomponent')
-// m.mount(document.getElementById('sub-main'), MyComponent)
-m.mount(document.getElementById('app'), App);
-m.render(document.getElementById('hello'), 'Hello Mithril.js');
+m.mount(document.getElementById('header'), Header_1.default);
+m.mount(document.getElementById('zigzag'), Zigzag);
 //# sourceMappingURL=index.js.map
