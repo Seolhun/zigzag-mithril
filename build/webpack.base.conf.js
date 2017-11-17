@@ -25,7 +25,8 @@ module.exports = {
       '@': resolve('src'),
       'assets': path.resolve('src/assets'),
       'components': path.resolve('src/components'),
-      'router': path.resolve('src/router')
+      'router': path.resolve('src/router'),
+      'view': path.resolve('src/view')
     },
   },
 
@@ -45,8 +46,9 @@ module.exports = {
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
       }, {
-        test: /\.tsx?$/,
+        test: /\.(tsx|ts)?$/,
         loader: 'awesome-typescript-loader',
+        include: [resolve('src'), resolve('test')],
         exclude: /node_modules/
       }, {
         test: /\.css$/,

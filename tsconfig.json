@@ -17,5 +17,9 @@
     "jsx": "react",
     "jsxFactory": "m",
     "watch": true
-  }
+  },
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

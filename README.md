@@ -1,35 +1,55 @@
 # Getting started 'Mithril.js'
 - Author : [SeolHun](https://github.com/SeolHun)
 - Date : 15.11.2017
+---
+### Requirement
+- Node
 
+---
+### How to run this porject
+1. Dev run
+- npm run dev
 
-### - Process
+2. Prod build
+- npm build
+	1. dist directory 안에 빌드된 결과가 나옵니다.
+	2. dist 안에 있는 static과 index.html을 배포합니다.
+
+---
+### Building Mithril on vue-cli without vue
+- 배경
+  1. Mithril의 빌드 및 개발방법 관련한 정보를 확장하고 싶었습니다.
+  2. Vue에 익숙하여 Vue-Cli에 잘 적용된 Webpack 설정을 가져오면 어렵지 않게 Mithril 개발의 환경을 비슷하게 적용할 수 있지 않을까란 생각을 하였습니다.
+  
+- 결과
+	- 실행에 옮겨 이와 같은 프로젝트 결과를 얻을 수 있었습니다.
+	- 그래서, 각각의 설정방법과 Packages관련한 설정정보를 정리하고자 합니다.
+
+---
+### - Mithril 공식사이트에서 기재된 방법입니다.
 - [Mithril.js](https://mithril.js.org/installation.html)
-1. Node Install
-
-2. npm init --yes
+1. npm init --yes
 - creates a file called package.json
 
-3. npm install mithril --save
+2. npm install mithril --save
 
-4. Path config
+3. Path config
 - $ mkdir src
-- $ touch index.js
+- $ touch Header.js
 ```javascript
-index.js
+Header.js
 var m = require("mithril")
 
 m.render(document.body, "hello world")
 ```
+4. npm install webpack --save-dev
 
-5. npm install webpack --save-dev
-
-6. Open the **package.json** that you created earlier, and add an entry to the scripts section:
+5. Open the **package.json** that you created earlier, and add an entry to the scripts section:
 ```json
 {
     "name": "my-project-name",
     "scripts": {
-        "start": index.js
+        "start": Header.js
     }
 }
 ```
@@ -53,86 +73,3 @@ m.render(document.body, "hello world")
 
 ---
 ### []TypeScript](https://github.com/MithrilJS/mithril.d.ts)
-
-
----
-### LifeCycle
-- oninit
-    - The oninit(vnode) hook is called before a vnode is touched by the virtual DOM engine. oninit is guaranteed to run before its DOM element is attached to the document, and it is guaranteed to run on parent vnodes before their children, but it does not offer any guarantees regarding the existence of ancestor or descendant DOM elements. You should never access the vnode.dom from the oninit method.
-    - Example
-        ```javascript
-        var ComponentWithState = {
-            oninit: function(vnode) {
-                this.data = vnode.attrs.data
-            },
-            view: function() {
-                return m("div", this.data) // displays data from initialization time
-            }
-        }
-        
-        m(ComponentWithState, {data: "Hello"})
-        
-        // Equivalent HTML
-        // <div>Hello</div>
-        ```
-- oncreate
-    - The oncreate(vnode) hook is called after a DOM element is created and attached to the document. oncreate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
-        ```javascript
-        var HeightReporter = {
-            oncreate: function(vnode) {
-                console.log("Initialized with height of: ", vnode.dom.offsetHeight)
-            },
-            view: function() {}
-        }
-        
-        m(HeightReporter, {data: "Hello"})
-        ```
-- onupdate
-    - The onupdate(vnode) hook is called after a DOM element is updated, while attached to the document. onupdate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
-        ```javascript
-        var RedrawReporter = {
-            count: 0,
-            onupdate: function(vnode) {
-                console.log("Redraws so far: ", ++vnode.state.count)
-            },
-            view: function() {}
-        }
-        
-        m(RedrawReporter, {data: "Hello"})
-        ```
-- onbeforeremove
-    - The onbeforeremove(vnode) hook is called before a DOM element is detached from the document. If a Promise is returned, Mithril only detaches the DOM element after the promise completes.
-    - Example
-        ```javascript
-        var Fader = {
-            onbeforeremove: function(vnode) {
-                vnode.dom.classList.add("fade-out")
-                return new Promise(function(resolve) {
-                    setTimeout(resolve, 1000)
-                })
-            },
-            view: function() {
-                return m("div", "Bye")
-            },
-        }
-        ```
-- onremove
-    - The onremove(vnode) hook is called before a DOM element is removed from the document. If a onbeforeremove hook is also defined, the onremove hook runs after the promise returned from onbeforeremove is completed.
-    - Example
-        ```javascript
-        var Timer = {
-            oninit: function(vnode) {
-                this.timeout = setTimeout(function() {
-                    console.log("timed out")
-                }, 1000)
-            },
-            onremove: function(vnode) {
-                clearTimeout(this.timeout)
-            },
-            view: function() {}
-        }
-        ```
-- onbeforeupdate
-    - The onbeforeupdate(vnode, old) hook is called before a vnode is diffed in a update. If this function is defined and returns false, Mithril prevents a diff from happening to the vnode, and consequently to the vnode's children.

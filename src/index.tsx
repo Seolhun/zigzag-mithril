@@ -1,21 +1,23 @@
 import * as m from 'mithril'
-import './router/route'
-import './assets/scss/global.scss'
+import 'router/Router'
+import 'assets/scss/global.scss'
+import Header from 'components/layout/Header'
 
-// import styles = require('./assets/scss/user/user.scss')
-import * as styles from './assets/scss/user/user.scss'
-
-// let Stream = require('mithril/stream')
-
-class App implements m.ClassComponent<{}> {
+class Zigzag implements m.ClassComponent<{}> {
   view() {
-    return <div class={styles.message}>Hello Mithril with JSX</div>
+    return (
+      <div class={'container'}>
+        <div class={'row'}>
+          <div class={'col-sm-12'}>
+          <h1>ZIGZAG app using mithril.js</h1>
+          <p>Local Css</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 }
 
 // Components
-// let MyComponent = require('./components/mycomponent')
-
-// m.mount(document.getElementById('sub-main'), MyComponent)
-m.mount(document.getElementById('app'), App)
-m.render(document.getElementById('hello'), 'Hello Mithril.js')
+m.mount(document.getElementById('header'), Header)
+m.mount(document.getElementById('zigzag'), Zigzag)
