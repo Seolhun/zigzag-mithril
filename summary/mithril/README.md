@@ -1,82 +1,36 @@
-# Mithril
+## Simple summary to use Mithril.
+
+Author : [SeolHun](Https://github.com/SeolHun)
 ---
-### Mithril LifeCycle
-- oninit
-    - The oninit(vnode) hook is called before a vnode is touched by the virtual DOM engine. oninit is guaranteed to run before its DOM element is attached to the document, and it is guaranteed to run on parent vnodes before their children, but it does not offer any guarantees regarding the existence of ancestor or descendant DOM elements. You should never access the vnode.dom from the oninit method.
-    - Example
-        ```javascript
-        var ComponentWithState = {
-            oninit: function(vnode) {
-                this.data = vnode.attrs.data
-            },
-            view: function() {
-                return m("div", this.data) // displays data from initialization time
-            }
-        }
-        
-        m(ComponentWithState, {data: "Hello"})
-        
-        // Equivalent HTML
-        // <div>Hello</div>
-        ```
-- oncreate
-    - The oncreate(vnode) hook is called after a DOM element is created and attached to the document. oncreate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
-        ```javascript
-        var HeightReporter = {
-            oncreate: function(vnode) {
-                console.log("Initialized with height of: ", vnode.dom.offsetHeight)
-            },
-            view: function() {}
-        }
-        
-        m(HeightReporter, {data: "Hello"})
-        ```
-- onupdate
-    - The onupdate(vnode) hook is called after a DOM element is updated, while attached to the document. onupdate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
-        ```javascript
-        var RedrawReporter = {
-            count: 0,
-            onupdate: function(vnode) {
-                console.log("Redraws so far: ", ++vnode.state.count)
-            },
-            view: function() {}
-        }
-        
-        m(RedrawReporter, {data: "Hello"})
-        ```
-- onbeforeremove
-    - The onbeforeremove(vnode) hook is called before a DOM element is detached from the document. If a Promise is returned, Mithril only detaches the DOM element after the promise completes.
-    - Example
-        ```javascript
-        var Fader = {
-            onbeforeremove: function(vnode) {
-                vnode.dom.classList.add("fade-out")
-                return new Promise(function(resolve) {
-                    setTimeout(resolve, 1000)
-                })
-            },
-            view: function() {
-                return m("div", "Bye")
-            },
-        }
-        ```
-- onremove
-    - The onremove(vnode) hook is called before a DOM element is removed from the document. If a onbeforeremove hook is also defined, the onremove hook runs after the promise returned from onbeforeremove is completed.
-    - Example
-        ```javascript
-        var Timer = {
-            oninit: function(vnode) {
-                this.timeout = setTimeout(function() {
-                    console.log("timed out")
-                }, 1000)
-            },
-            onremove: function(vnode) {
-                clearTimeout(this.timeout)
-            },
-            view: function() {}
-        }
-        ```
-- onbeforeupdate
-    - The onbeforeupdate(vnode, old) hook is called before a vnode is diffed in a update. If this function is defined and returns false, Mithril prevents a diff from happening to the vnode, and consequently to the vnode's children.
+#### 1. [JSX]
+- JSX는 Javascript로 HTML 태그를 작성할 수있는 구문 확장입니다. 
+- Javascript 표준은 아니지만, 팀에 선호도에 따라 사용하는 것이 더 편리할 수 있습니다.
+
+- [Mithril JSX]((https://mithril.js.org/jsx.html))
+
+```javascript
+// Basic Mithril
+var MyComponent = {
+  view: function() {
+    return m("main", [
+      m("h1", "Hello world"),
+    ])
+  }
+}
+
+// JSX
+var MyComponent = {
+  view: function() {
+    return (
+      <main>
+        <h1>Hello world</h1>
+      </main>
+    )
+  }
+}
+```
+
+#### 3. ES6
+Mithril은 ES5로 작성되었으며 ES6와도 완벽하게 호환됩니다. ES6은 다양한 일반적인 경우에 대해 새로운 구문 설탕을 도입 한 Javascript에 대한 최근 업데이트입니다. 모든 주요 브라우저가 아직 완전히 지원하지는 않으며 응용 프로그램을 작성하는 데 필요하지 않지만 팀의 기본 설정에 따라 사용하는 것이 즐겁습니다.
+
+일부 제한된 환경에서는 IE를 지원하지 않는 내부 응용 프로그램과 같이 별도의 도구없이 ES6의 중요한 하위 집합을 직접 사용할 수 있습니다. 그러나 대부분의 사용 사례에서 ES6 기능을 ES5로 컴파일하려면 Babel과 같은 컴파일러 도구 체인이 필요합니다.

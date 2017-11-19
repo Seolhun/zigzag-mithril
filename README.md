@@ -72,4 +72,4 @@ m.render(document.body, "hello world")
 ```
 
 ---
-### []TypeScript](https://github.com/MithrilJS/mithril.d.ts)
+### [TypeScript](https://github.com/MithrilJS/mithril.d.ts)
