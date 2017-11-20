@@ -1,8 +1,21 @@
 /* styles.css */
+/***************
+* TagName SCSS *
+****************/
 body, .input, .button {
-  font: normal 16px Verdana;
-  margin: 0; }
+  font: normal 16px Verdana; }
 
+textarea {
+  height: auto;
+  width: auto;
+  min-height: 100px; }
+
+/***********************
+* Global Variable SCSS *
+***********************/
+/***************
+* Class SCSS *
+****************/
 .user-list {
   list-style: none;
   margin: 0 0 10px;
@@ -15,34 +28,24 @@ body, .input, .button {
   margin: 0 0 1px;
   padding: 8px 15px;
   text-decoration: none; }
-
-.user-list-item:hover {
-  text-decoration: underline; }
+  .user-list-item:hover {
+    text-decoration: underline; }
 
 .label {
-  display: block;
-  margin: 0 0 5px; }
-
-.input {
   color: black;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  box-sizing: border-box;
-  display: block;
-  margin: 0 0 10px;
-  padding: 10px 15px;
-  width: 100%; }
+  margin: 0 0 5px; }
+  .label > input {
+    margin-right: 5px; }
 
 .button {
-  background: #eee;
-  border: 1px solid #ddd;
+  background: ff0060;
+  border: 1px solid ff0060;
   border-radius: 3px;
   display: inline-block;
   margin: 0 0 10px;
   padding: 10px 15px;
   text-decoration: none; }
-
-.button:hover {
-  background: #e8e8e8; }
+  .button:hover {
+    background: ff0060; }
 
 /*# sourceMappingURL=global.css.map */

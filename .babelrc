@@ -1,6 +1,6 @@
 {
   "presets": [
-    "es2015",
+    "es2016",
     ["env", {
       "modules": false,
       "targets": {
@@ -10,8 +10,7 @@
     "stage-2"
   ],
   "plugins": [
-    "transform-runtime",
-    "transform-react-jsx", {"pragma": "m"}
+    "transform-runtime"
   ],
   "env": {
     "test": {
