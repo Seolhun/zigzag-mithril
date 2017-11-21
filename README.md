@@ -35,9 +35,9 @@
 
 3. Path config
 - $ mkdir src
-- $ touch Header.js
+- $ touch index.js
 ```javascript
-Header.js
+index.js
 var m = require("mithril")
 
 m.render(document.body, "hello world")
@@ -49,7 +49,7 @@ m.render(document.body, "hello world")
 {
     "name": "my-project-name",
     "scripts": {
-        "start": Header.js
+        "start": index.js
     }
 }
 ```
@@ -72,4 +72,4 @@ m.render(document.body, "hello world")
 ```
 
 ---
-### []TypeScript](https://github.com/MithrilJS/mithril.d.ts)
+### [TypeScript](https://github.com/MithrilJS/mithril.d.ts)

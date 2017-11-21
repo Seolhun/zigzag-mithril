@@ -24,9 +24,12 @@ module.exports = {
     alias: {
       '@': resolve('src'),
       'assets': path.resolve('src/assets'),
-      'components': path.resolve('src/components'),
-      'router': path.resolve('src/router'),
-      'view': path.resolve('src/view')
+      'scss': path.resolve('src/assets/scss'),
+      'ts': path.resolve('src/ts'),
+      'components': path.resolve('src/ts/components'),
+      'models': path.resolve('src/ts/models'),
+      'router': path.resolve('src/ts/router'),
+      'view': path.resolve('src/ts/view')
     },
   },
 

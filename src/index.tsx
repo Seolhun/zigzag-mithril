@@ -1,16 +1,34 @@
-import * as m from 'mithril'
-import 'router/Router'
+import m from 'mithril'
+import 'ts/router/Router'
 import 'assets/scss/global.scss'
-import Header from 'components/layout/Header'
+import {headerComponent} from 'ts/components/layout/Header'
+import {userModel} from 'ts/models/user/UserModel'
 
 class Zigzag implements m.ClassComponent<{}> {
+  oninit() {
+    userModel.loadList()
+  }
+
   view() {
     return (
       <div class={'container'}>
         <div class={'row'}>
-          <div class={'col-sm-12'}>
-            <h1>ZIGZAG app using mithril.js</h1>
-            <p>Local Css</p>
+          <div
+            class={'col-sm-12'}
+          >
+            {
+              userModel.searchUserList.map(function (user) {
+                return (
+                  <a
+                    class={'user-list-item'}
+                    href={'/' + user.nickname}
+                    oncreate={m.route.link}
+                  >
+                    {user.email + ' ' + user.nickname}
+                  </a>
+                )
+              })
+            }
           </div>
         </div>
       </div>
@@ -19,5 +37,5 @@ class Zigzag implements m.ClassComponent<{}> {
 }
 
 // Components
-m.mount(document.getElementById('header'), Header)
+m.mount(document.getElementById('header'), headerComponent)
 m.mount(document.getElementById('zigzag'), Zigzag)

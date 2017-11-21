@@ -1,10 +1,11 @@
 // Reference : https://www.typescriptlang.org/docs/handbook/compiler-options.html
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
-      "es6",
-      "dom"
+      "Es6",
+      "Dom",
+      "ScriptHost"
     ],
     "compilerOptions": {
       "moduleResolution": "node"
