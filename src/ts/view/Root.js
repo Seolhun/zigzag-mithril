@@ -14,14 +14,14 @@ export default {
                             m("li", null,
                                 m("h4", null, "\uD544\uC218\uC0AC\uD56D")),
                             m("ol", null,
-                                m("li", null, "\uD55C\uAC1C \uC774\uC0C1\uC758 \uC11C\uBE0C \uCEF4\uD3EC\uB10C\uD2B8\uB97C \uC0AC\uC6A9\uD574\uC8FC\uC138\uC694."))),
+                                m("li", null, "\uD55C\uAC1C \uC774\uC0C1\uC758 \uC11C\uBE0C \uCEF4\uD3EC\uB10C\uD2B8\uB97C \uC0AC\uC6A9\uD574\uC8FC\uC138\uC694. - \uC801\uC6A9(Header, Detail, Agreement...)"))),
                         m("ul", null,
                             m("li", null,
                                 m("h4", null, "\uC120\uD0DD\uC0AC\uD56D")),
                             m("ol", null,
-                                m("li", null, "1. \uBAA8\uB378 \uB370\uC774\uD130(\uC18D\uC131)\uC5D0 Mithril stream\uC744 \uC801\uC6A9"),
-                                m("li", null, "2. TypeScript \uC0AC\uC6A9"),
-                                m("li", null, "3. CSS class\uB97C local scope\uB85C \uC815\uC758"))))))));
+                                m("li", null, "1. \uBAA8\uB378 \uB370\uC774\uD130(\uC18D\uC131)\uC5D0 Mithril stream\uC744 \uC801\uC6A9 - \uBBF8\uC801\uC6A9"),
+                                m("li", null, "2. TypeScript \uC0AC\uC6A9 - \uC801\uC6A9"),
+                                m("li", null, "3. CSS class\uB97C local scope\uB85C \uC815\uC758 - \uC801\uC6A9"))))))));
     }
 };
 //# sourceMappingURL=Root.js.map

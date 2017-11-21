@@ -2,13 +2,13 @@ import m from 'mithril'
 import 'assets/scss/agree/serviceAgree.scss'
 import {userModel} from 'models/user/UserModel'
 
-const serviceAgreement = {
+const serviceAgreementComponent = {
   isAllAgree: false,
   isSubmit: false,
 
   oninit() {
-    serviceAgreement.isAllAgree = false
-    serviceAgreement.isSubmit = false
+    serviceAgreementComponent.isAllAgree = false
+    serviceAgreementComponent.isSubmit = false
   },
 
   oncreate() {
@@ -20,7 +20,7 @@ const serviceAgreement = {
   },
 
   onupdate() {
-    serviceAgreement.isAllAgree = !!(userModel.current.privateAgree && userModel.current.serviceAgree)
+    serviceAgreementComponent.isAllAgree = !!(userModel.current.privateAgree && userModel.current.serviceAgree)
   },
 
   submitAgree() {
@@ -33,7 +33,7 @@ const serviceAgreement = {
       document.getElementById('privateAgree').focus()
       return
     }
-    serviceAgreement.isSubmit = true
+    serviceAgreementComponent.isSubmit = true
   },
 
   view() {
@@ -288,11 +288,13 @@ const serviceAgreement = {
         </p><p>부칙</p><p>이 약관은 2017년 11월 10일부터 적용됩니다.</p></div>
         <div class={'text-right'}>
           <label class={'checkbox-inline agree text-right'}>
-            <input type="checkbox" id="serviceAgree"
-                   onchange={m.withAttr('value', value => {
-                     userModel.current.serviceAgree = value
-                   })}
-                   value={!userModel.current.serviceAgree}
+            <input
+              type="checkbox"
+              id="serviceAgree"
+              onclick={m.withAttr('value', value => {
+                userModel.current.serviceAgree = !userModel.current.serviceAgree
+              })}
+              value={userModel.current.serviceAgree}
             />
             동의합니다
           </label>
@@ -506,10 +508,10 @@ const serviceAgreement = {
             <input
               type="checkbox"
               id="privateAgree"
-              onchange={m.withAttr('value', value => {
-                userModel.current.privateAgree = value
+              onclick={m.withAttr('value', value => {
+                userModel.current.privateAgree = !userModel.current.privateAgree
               })}
-              value={!userModel.current.privateAgree}
+              value={userModel.current.privateAgree}
             />동의합니다
           </label>
         </div>
@@ -525,4 +527,4 @@ const serviceAgreement = {
   }
 }
 
-export {serviceAgreement}
+export {serviceAgreementComponent}

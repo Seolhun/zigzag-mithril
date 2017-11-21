@@ -1,8 +1,13 @@
 import m from 'mithril'
 import 'assets/scss/layout/header.scss'
+import {userModel} from 'models/user/UserModel'
 
-export default {
-  view() {
+const headerComponent = {
+  oncreate() {
+    console.log('oncreate Header')
+  },
+
+  view: function () {
     return (
       <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -46,9 +51,22 @@ export default {
             </ul>
             <form class="navbar-form navbar-right">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search"/>
+                <input
+                  type="text"
+                  class="form-control"
+                  id={'searchValue'}
+                  placeholder="Search"
+                />
               </div>
-              <button type="submit" class="btn btn-default">
+              <button
+                type="submit"
+                class="btn btn-default"
+                onclick={
+                  m.withAttr('value', () => {
+                    headerCtrl.searchUser()
+                  })
+                }
+              >
                 Submit
               </button>
             </form>
@@ -58,3 +76,27 @@ export default {
     )
   }
 } as m.Component<{}, {}>
+
+// Public method To use anywhere.
+const headerCtrl = {
+  searchUser() {
+    let searchValue = (document.getElementById('searchValue') as HTMLTextAreaElement).value
+    if (searchValue.length < 1) {
+      alert('검색어를 입력해주세요.')
+      return
+    } else {
+      searchValue = searchValue.toLowerCase().trim()
+      userModel.searchUserList = userModel.storedUserList.filter(function (user) {
+        return user.nickname.toLowerCase().indexOf(searchValue) !== -1 || user.email.toLowerCase().indexOf(searchValue) !== -1
+      })
+
+      if (userModel.searchUserList.length < 1) {
+        alert('매칭 된 검색 결과가 없습니다.')
+        return
+      }
+    }
+  }
+}
+
+
+export {headerCtrl, headerComponent}

@@ -2,38 +2,72 @@ import m from 'mithril'
 // import 'assets/scss/user/user.scss'
 import localStyle from 'assets/scss/user/user.scss'
 import {User, userModel} from 'models/user/UserModel'
-import UserDetail from 'view/user/UserDetail'
-import {serviceAgreement} from 'components/agree/ServiceAgreement'
+import {serviceAgreementComponent} from 'components/agree/ServiceAgreement'
 
+import UserDetail from 'view/user/UserDetail'
+
+//Private Methods. Never export this object.
+const _userFromCtrl = {
+  isRegister() {
+    return m.route.get().includes('registration')
+  },
+
+  isChecked(value) {
+    // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
+    if (!this.isRegister()) {
+      return userModel.current.receiveInfo.indexOf(value) !== -1
+    }
+  },
+
+  putOrRemove(checked, value) {
+    if (checked) {
+      userModel.current.receiveInfo.push(value)
+    } else {
+      userModel.current.receiveInfo.splice(userModel.current.receiveInfo.indexOf(value), 1)
+    }
+  },
+
+  showOnlyService() {
+    document.getElementById('user-form').style.display = 'none'
+    document.getElementById('service-agree').style.display = 'block'
+  },
+
+  showOnlyUserForm() {
+    document.getElementById('user-form').style.display = 'block'
+    document.getElementById('service-agree').style.display = 'none'
+  }
+}
+
+//Main View
 export default {
   oninit(vnode) {
-    if (m.route.get().includes('registration')) {
+    if (_userFromCtrl.isRegister()) {
       userModel.current = {} as User
-    }
-  },
-
-  // Dom 생성시 Edit인지 가입인지 확인하여 처리하기
-  oncreate() {
-    m.mount(document.getElementById('userDetail'), UserDetail)
-    if (m.route.get().includes('registration')) {
-      m.mount(document.getElementById('service-agree'), serviceAgreement)
-      document.getElementById('user-form').style.display = 'none'
-      document.getElementById('service-agree').style.display = 'block'
+      userModel.current.receiveInfo = []
     } else {
-      document.getElementById('user-form').style.display = 'block'
+      userModel.getByNickname(vnode.attrs.nickname)
     }
   },
 
-  // 회원가입시 서비스 등록여부 확ㅇ니하기
+  // Is Edit or Join
+  oncreate(vnode) {
+    m.mount(document.getElementById('userDetail'), UserDetail)
+    if (_userFromCtrl.isRegister()) {
+      m.mount(document.getElementById('service-agree'), serviceAgreementComponent)
+      _userFromCtrl.showOnlyService()
+    } else {
+      _userFromCtrl.showOnlyUserForm()
+    }
+  },
+
+  // Is Agree about our Service?
   onupdate() {
     // Changed window when all agreed
-    if (m.route.get().includes('registration')) {
-      if (serviceAgreement.isAllAgree && serviceAgreement.isSubmit) {
-        document.getElementById('user-form').style.display = 'block'
-        document.getElementById('service-agree').style.display = 'none'
+    if (_userFromCtrl.isRegister()) {
+      if (serviceAgreementComponent.isAllAgree && serviceAgreementComponent.isSubmit) {
+        _userFromCtrl.showOnlyUserForm()
       } else {
-        document.getElementById('user-form').style.display = 'none'
-        document.getElementById('service-agree').style.display = 'block'
+        _userFromCtrl.showOnlyService()
       }
     }
   },
@@ -62,12 +96,28 @@ export default {
                   Email
                 </label>
                 <input
+                  type={'email'}
                   class={'form-control'}
                   placeholder={'Email'}
                   oninput={m.withAttr('value', value => {
                     userModel.current.email = value
                   })}
                   value={userModel.current.email}
+                />
+              </div>
+
+              {/* Email */}
+              <div class={'form-group'}>
+                <label class={'label'}>
+                  Nickname
+                </label>
+                <input
+                  class={'form-control'}
+                  placeholder={'Nickname'}
+                  oninput={m.withAttr('value', value => {
+                    userModel.current.nickname = value
+                  })}
+                  value={userModel.current.nickname}
                 />
               </div>
 
@@ -137,6 +187,7 @@ export default {
                     onchange={m.withAttr('value', value => {
                       userModel.current.sex = value
                     })}
+                    checked={userModel.current.sex === 'Male'}
                   />
                   Male
                 </label>
@@ -147,10 +198,11 @@ export default {
                   <input
                     type="radio"
                     name={'gender'}
-                    value={'Femail'}
+                    value={'Female'}
                     onchange={m.withAttr('value', value => {
                       userModel.current.sex = value
                     })}
+                    checked={userModel.current.sex === 'Female'}
                   />
                   Female
                 </label>
@@ -170,12 +222,11 @@ export default {
                 >
                   <input
                     type="checkbox"
-                    id="sendmail"
                     value="Phone"
-                    onchange={m.withAttr('value', value => {
-                      console.log(value)
-                      userModel.current.receiveInfo = value
+                    onchange={m.withAttr('checked', checked => {
+                      _userFromCtrl.putOrRemove(checked, 'Phone')
                     })}
+                    checked={_userFromCtrl.isChecked('Phone')}
                   />
                   Phone
                 </label>
@@ -185,11 +236,11 @@ export default {
                 >
                   <input
                     type="checkbox"
-                    id="sendInfomail"
                     value="Email"
-                    onchange={m.withAttr('value', value => {
-                      userModel.current.receiveInfo = value
+                    onchange={m.withAttr('checked', checked => {
+                      _userFromCtrl.putOrRemove(checked, 'Email')
                     })}
+                    checked={_userFromCtrl.isChecked('Email')}
                   />
                   Email
                 </label>
@@ -203,6 +254,10 @@ export default {
               <button
                 class={'btn btn-primary'}
                 type={'submit'}
+                onsubmit={(e: Event) => {
+                  e.preventDefault()
+                  userModel.save()
+                }}
               >
                 Save
               </button>

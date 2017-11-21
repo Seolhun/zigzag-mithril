@@ -1,7 +1,11 @@
 import m from 'mithril';
 import 'assets/scss/layout/header.scss';
-export default {
-    view() {
+import { userModel } from 'models/user/UserModel';
+const headerComponent = {
+    oncreate() {
+        console.log('oncreate Header');
+    },
+    view: function () {
         return (m("nav", { class: "navbar navbar-default" },
             m("div", { class: "container-fluid" },
                 m("div", { class: "navbar-header" },
@@ -23,8 +27,31 @@ export default {
                                 m("span", { class: "sr-only" })))),
                     m("form", { class: "navbar-form navbar-right" },
                         m("div", { class: "form-group" },
-                            m("input", { type: "text", class: "form-control", placeholder: "Search" })),
-                        m("button", { type: "submit", class: "btn btn-default" }, "Submit"))))));
+                            m("input", { type: "text", class: "form-control", id: 'searchValue', placeholder: "Search" })),
+                        m("button", { type: "submit", class: "btn btn-default", onclick: m.withAttr('value', () => {
+                                headerCtrl.searchUser();
+                            }) }, "Submit"))))));
     }
 };
+// Public method To use anywhere.
+const headerCtrl = {
+    searchUser() {
+        let searchValue = document.getElementById('searchValue').value;
+        if (searchValue.length < 1) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
+        else {
+            searchValue = searchValue.toLowerCase().trim();
+            userModel.searchUserList = userModel.storedUserList.filter(function (user) {
+                return user.nickname.toLowerCase().indexOf(searchValue) !== -1 || user.email.toLowerCase().indexOf(searchValue) !== -1;
+            });
+            if (userModel.searchUserList.length < 1) {
+                alert('매칭 된 검색 결과가 없습니다.');
+                return;
+            }
+        }
+    }
+};
+export { headerCtrl, headerComponent };
 //# sourceMappingURL=Header.js.map

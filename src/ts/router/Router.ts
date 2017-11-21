@@ -1,30 +1,31 @@
 import m from 'mithril'
-import UserDetail from '../view/user/UserDetail'
-import Root from '../view/Root'
-import UserList from '../view/user/UserList'
-import UserForm from '../view/user/UserForm'
+import Root from 'view/Root'
+import UserList from 'view/user/UserList'
+import UserForm from 'view/user/UserForm'
+import UserDetail from 'view/user/UserDetail'
 
 /**
  * @Referenece : https://mithril.js.org/route.html;
  * */
 m.route(document.getElementById('router-view'), '/', {
   '/': {
-    render() {
-      return m(Root)
-    }
+    onmatch() {
+      return Root
+    },
   },
-  '/list': UserList,
-  '/detail/:name': {
+  // Join To us
+  '/registration': UserForm,
+  // User Detail
+  '/:nickname': {
     render(vnode) {
-      return m(UserDetail, vnode.attrs)
+      if (vnode.attrs.nickname === 'list') {
+        return m(UserList, vnode.attrs)
+      } else {
+        return m(UserDetail, vnode.attrs)
+      }
     }
   },
-  '/edit/:id': {
-    render(vnode) {
-      return m(UserForm, vnode.attrs)
-    }
-  },
-  '/registration': {
+  '/:nickname/edit': {
     render(vnode) {
       return m(UserForm, vnode.attrs)
     }

@@ -1,5 +1,5 @@
 import m from 'mithril'
-import {userModel} from '../../models/user/UserModel'
+import {userModel, User} from 'models/user/UserModel'
 
 export default {
   oninit() {
@@ -27,14 +27,14 @@ export default {
           </div>
           <div class={'col-sm-12'}>
             {
-              userModel.list.map(function (user) {
+              userModel.storedUserList.map(function (user) {
                 return (
                   <a
                     class={'user-list-item'}
-                    href={'/edit/' + user.id}
+                    href={'/' + user.nickname}
                     oncreate={m.route.link}
                   >
-                    {user.email + ' ' + user.createdDate}
+                    {user.email + ' ' + user.nickname}
                   </a>
                 )
               })
@@ -44,4 +44,4 @@ export default {
       </div>
     )
   }
-} as m.Component<{User}, {}>
+} as m.Component<User, {}>

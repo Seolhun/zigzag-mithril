@@ -1,12 +1,12 @@
 import m from 'mithril';
 import 'assets/scss/agree/serviceAgree.scss';
 import { userModel } from 'models/user/UserModel';
-const serviceAgreement = {
+const serviceAgreementComponent = {
     isAllAgree: false,
     isSubmit: false,
     oninit() {
-        serviceAgreement.isAllAgree = false;
-        serviceAgreement.isSubmit = false;
+        serviceAgreementComponent.isAllAgree = false;
+        serviceAgreementComponent.isSubmit = false;
     },
     oncreate() {
         if (m.route.get().includes('registration')) {
@@ -17,7 +17,7 @@ const serviceAgreement = {
         }
     },
     onupdate() {
-        serviceAgreement.isAllAgree = !!(userModel.current.privateAgree && userModel.current.serviceAgree);
+        serviceAgreementComponent.isAllAgree = !!(userModel.current.privateAgree && userModel.current.serviceAgree);
     },
     submitAgree() {
         if (!userModel.current.serviceAgree) {
@@ -30,7 +30,7 @@ const serviceAgreement = {
             document.getElementById('privateAgree').focus();
             return;
         }
-        serviceAgreement.isSubmit = true;
+        serviceAgreementComponent.isSubmit = true;
     },
     view() {
         return (m("section", { class: "content", id: 'sign-agreement' },
@@ -445,9 +445,9 @@ const serviceAgreement = {
                 m("p", null, "\uC774 \uC57D\uAD00\uC740 2017\uB144 11\uC6D4 10\uC77C\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.")),
             m("div", { class: 'text-right' },
                 m("label", { class: 'checkbox-inline agree text-right' },
-                    m("input", { type: "checkbox", id: "serviceAgree", onchange: m.withAttr('value', value => {
-                            userModel.current.serviceAgree = value;
-                        }), value: !userModel.current.serviceAgree }),
+                    m("input", { type: "checkbox", id: "serviceAgree", onclick: m.withAttr('value', value => {
+                            userModel.current.serviceAgree = !userModel.current.serviceAgree;
+                        }), value: userModel.current.serviceAgree }),
                     "\uB3D9\uC758\uD569\uB2C8\uB2E4")),
             m("h5", null, "\uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68"),
             m("div", { id: "privacy" },
@@ -724,13 +724,13 @@ const serviceAgreement = {
                 m("p", null, "\uC774 \uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68\uC740 2017\uB144 11\uC6D4 10\uC77C\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.")),
             m("div", { class: 'text-right' },
                 m("label", { class: 'checkbox-inline agree' },
-                    m("input", { type: "checkbox", id: "privateAgree", onchange: m.withAttr('value', value => {
-                            userModel.current.privateAgree = value;
-                        }), value: !userModel.current.privateAgree }),
+                    m("input", { type: "checkbox", id: "privateAgree", onclick: m.withAttr('value', value => {
+                            userModel.current.privateAgree = !userModel.current.privateAgree;
+                        }), value: userModel.current.privateAgree }),
                     "\uB3D9\uC758\uD569\uB2C8\uB2E4")),
             m("div", { class: 'buttons text-center' },
                 m("button", { class: "btn btn-primary agree", onclick: this.submitAgree }, "\uB3D9\uC758"))));
     }
 };
-export { serviceAgreement };
+export { serviceAgreementComponent };
 //# sourceMappingURL=ServiceAgreement.js.map

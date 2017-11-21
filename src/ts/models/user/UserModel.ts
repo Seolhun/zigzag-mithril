@@ -1,56 +1,86 @@
 import m from 'mithril'
 
-enum ReceiveInformation {
-  Email,
-  Phone
-}
-
 interface User {
   id: number
+  nickname: string
   email: string
   password: string
   birth: Date
   description: string
   sex: string
   styles: string[]
-  receiveInfo: ReceiveInformation[]
+  receiveInfo: string[]
 
   privateAgree: boolean
   serviceAgree: boolean
+
+  isActive: boolean
   createdDate: Date
 }
 
 const userModel = {
-  list: [] as User[],
+  searchUserList: [] as User[],
+  storedUserList: [] as User[],
+
   loadList() {
-    return m.request<{ data: User[] }>({
-      method: 'GET',
-      url: 'https://rem-rest-api.herokuapp.com/api/users',
-      withCredentials: true
-    }).then(result => {
-      userModel.list = result.data
-    })
+    userModel.storedUserList = userModel.getFromStrage('userList')
+    if (userModel.storedUserList === null) {
+      userModel.storedUserList = [] as User[]
+    }
+    //----------API Call Examples----------
+    // return m.request<{ data: User[] }>({
+    //   method: 'GET',
+    //   url: 'https://rem-rest-api.herokuapp.com/api/users',
+    //   withCredentials: true
+    // }).then(result => {
+    //   userModel.list = result.data
+    // })
   },
 
   // Current User
   current: {} as User,
-  getById(id: number) {
-    return m.request<User>({
-      method: 'GET',
-      url: 'https://rem-rest-api.herokuapp.com/api/users/' + id,
-      withCredentials: true
-    }).then(result => {
-      userModel.current = result
-    })
+  getByNickname(nickname: string) {
+    userModel.current = userModel.getFromStrage(nickname)
+    if (userModel.current === null) {
+      userModel.current = {} as User
+    }
+    //----------API Call Examples----------
+    // return m.request<User>({
+    //   method: 'GET',
+    //   url: 'https://rem-rest-api.herokuapp.com/api/users/' + nickname,
+    //   withCredentials: true
+    // }).then(result => {
+    //   userModel.current = result
+    // })
   },
 
   save() {
-    return m.request({
-      method: 'PUT',
-      url: 'https://rem-rest-api.herokuapp.com/api/users/' + userModel.current.id,
-      data: userModel.current,
-      withCredentials: true
-    })
+    userModel.storedUserList.push(userModel.current)
+    userModel.setIntoStorageOne()
+    userModel.setIntoStorageList()
+
+    alert(userModel.current.nickname + '님 ZIGZAG에 오신것을 환영합니다.')
+    m.route.set('/' + userModel.current.nickname)
+    userModel.current = {} as User
+    //----------API Call Examples----------
+    // return m.request({
+    //   method: 'PUT',
+    //   url: 'https://rem-rest-api.herokuapp.com/api/users/' + userModel.current.id,
+    //   data: userModel.current,
+    //   withCredentials: true
+    // })
+  },
+
+  getFromStrage(key) {
+    return JSON.parse(localStorage.getItem(key))
+  },
+
+  setIntoStorageList() {
+    localStorage.setItem('userList', JSON.stringify(userModel.storedUserList))
+  },
+
+  setIntoStorageOne() {
+    localStorage.setItem(userModel.current.nickname, JSON.stringify(userModel.current))
   }
 }
 

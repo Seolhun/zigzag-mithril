@@ -20,7 +20,7 @@ export default {
                 </li>
                 <ol>
                   <li>
-                    한개 이상의 서브 컴포넌트를 사용해주세요.
+                    한개 이상의 서브 컴포넌트를 사용해주세요. - 적용(Header, Detail, Agreement...)
                   </li>
                 </ol>
               </ul>
@@ -31,13 +31,13 @@ export default {
                 </li>
                 <ol>
                   <li>
-                    1. 모델 데이터(속성)에 Mithril stream을 적용
+                    1. 모델 데이터(속성)에 Mithril stream을 적용 - 미적용
                   </li>
                   <li>
-                    2. TypeScript 사용
+                    2. TypeScript 사용 - 적용
                   </li>
                   <li>
-                    3. CSS class를 local scope로 정의
+                    3. CSS class를 local scope로 정의 - 적용
                   </li>
                 </ol>
               </ul>
