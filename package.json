@@ -14,7 +14,6 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
-    "aws-sdk": "^2.153.0",
     "mithril": "^1.1.5"
   },
   "devDependencies": {
