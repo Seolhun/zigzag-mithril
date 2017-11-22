@@ -21,25 +21,6 @@ $main-color: ff0060;
 /***************
 * Class SCSS *
 ****************/
-.user-list {
-  list-style: none;
-  margin: 0 0 10px;
-  padding: 0;
-}
-
-.user-list-item {
-  background: #fafafa;
-  border: 1px solid #ddd;
-  display: block;
-  margin: 0 0 1px;
-  padding: 8px 15px;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .label {
   color: black;
   margin: 0 0 5px;
@@ -61,4 +42,8 @@ $main-color: ff0060;
   &:hover {
     background: $main-color;
   }
+}
+
+.isError {
+  color: red;
 }

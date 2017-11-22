@@ -2,12 +2,30 @@ import m from 'mithril'
 import 'assets/scss/layout/header.scss'
 import {userModel} from 'models/user/UserModel'
 
-const headerComponent = {
-  oncreate() {
-    console.log('oncreate Header')
-  },
+// Public method To use anywhere.
+const headerCtrl = {
+  searchUser() {
+    let searchValue = (document.getElementById('searchValue') as HTMLTextAreaElement).value
+    if (searchValue.length < 1) {
+      alert('검색어를 입력해주세요.')
+      return
+    } else {
+      searchValue = searchValue.toLowerCase().trim()
+      userModel.list = userModel.storedUserList.filter(function (user) {
+        return user.nickname.toLowerCase().indexOf(searchValue) !== -1 || user.email.toLowerCase().indexOf(searchValue) !== -1
+      })
 
-  view: function () {
+      if (userModel.list.length < 1) {
+        alert('매칭 된 검색 결과가 없습니다.')
+        return
+      }
+    }
+  }
+}
+
+
+const headerComponent = {
+  view() {
     return (
       <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -76,27 +94,6 @@ const headerComponent = {
     )
   }
 } as m.Component<{}, {}>
-
-// Public method To use anywhere.
-const headerCtrl = {
-  searchUser() {
-    let searchValue = (document.getElementById('searchValue') as HTMLTextAreaElement).value
-    if (searchValue.length < 1) {
-      alert('검색어를 입력해주세요.')
-      return
-    } else {
-      searchValue = searchValue.toLowerCase().trim()
-      userModel.searchUserList = userModel.storedUserList.filter(function (user) {
-        return user.nickname.toLowerCase().indexOf(searchValue) !== -1 || user.email.toLowerCase().indexOf(searchValue) !== -1
-      })
-
-      if (userModel.searchUserList.length < 1) {
-        alert('매칭 된 검색 결과가 없습니다.')
-        return
-      }
-    }
-  }
-}
 
 
 export {headerCtrl, headerComponent}

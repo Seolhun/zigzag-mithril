@@ -1,7 +1,7 @@
 import m from 'mithril'
 import Root from 'view/Root'
 import UserList from 'view/user/UserList'
-import UserForm from 'view/user/UserForm'
+import {userForm} from 'view/user/UserForm'
 import UserDetail from 'view/user/UserDetail'
 
 /**
@@ -14,7 +14,7 @@ m.route(document.getElementById('router-view'), '/', {
     },
   },
   // Join To us
-  '/registration': UserForm,
+  '/registration': userForm,
   // User Detail
   '/:nickname': {
     render(vnode) {
@@ -23,11 +23,6 @@ m.route(document.getElementById('router-view'), '/', {
       } else {
         return m(UserDetail, vnode.attrs)
       }
-    }
-  },
-  '/:nickname/edit': {
-    render(vnode) {
-      return m(UserForm, vnode.attrs)
     }
   }
 })

@@ -1,33 +1,28 @@
 import m from 'mithril';
 import Root from 'view/Root';
 import UserList from 'view/user/UserList';
-import UserForm from 'view/user/UserForm';
+import { userForm } from 'view/user/UserForm';
 import UserDetail from 'view/user/UserDetail';
 /**
  * @Referenece : https://mithril.js.org/route.html;
  * */
 m.route(document.getElementById('router-view'), '/', {
     '/': {
-        onmatch() {
+        onmatch: function () {
             return Root;
         },
     },
     // Join To us
-    '/registration': UserForm,
+    '/registration': userForm,
     // User Detail
     '/:nickname': {
-        render(vnode) {
+        render: function (vnode) {
             if (vnode.attrs.nickname === 'list') {
                 return m(UserList, vnode.attrs);
             }
             else {
                 return m(UserDetail, vnode.attrs);
             }
-        }
-    },
-    '/:nickname/edit': {
-        render(vnode) {
-            return m(UserForm, vnode.attrs);
         }
     }
 });
