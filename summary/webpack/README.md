@@ -1,4 +1,0 @@
-# Webpack
----
-### Webpack Configuration Summary
- 

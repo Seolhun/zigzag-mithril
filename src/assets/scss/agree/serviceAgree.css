@@ -1,6 +1,6 @@
-#agreement, #privacy {
+:local .agreement {
   background: #fbfbfb;
-  height: 200px;
+  height: 250px;
   margin: 10px 0 0;
   border-radius: 3px;
   border: 1px solid #ddd;

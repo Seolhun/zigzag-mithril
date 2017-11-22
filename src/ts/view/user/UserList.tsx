@@ -1,15 +1,62 @@
 import m from 'mithril'
-import {userModel, User} from 'models/user/UserModel'
+import localStyle from 'assets/scss/user/user.scss'
+import {User, userModel} from 'models/user/UserModel'
+
+const _userListCtrl = {
+  getList() {
+    if (userModel.storedUserList.length < 1) {
+      return (
+        <h4>등록된 유저가 없습니다. 유저를 등록해주세요.</h4>
+      )
+    }
+    return (
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Email</th>
+          <th>Nickname</th>
+          <th>Brith</th>
+          <th>How to receive</th>
+        </tr>
+        </thead>
+        <tbody>
+        {
+          userModel.storedUserList.map(function (user) {
+            return (
+              <tr
+                class={localStyle.userListItem}
+                href={'/' + user.nickname}
+                oncreate={m.route.link}
+              >
+                <td>
+                  {user.email}
+                </td>
+                <td>
+                  {user.nickname}
+                </td>
+                <td>
+                  {user.birth}
+                </td>
+                <td>
+                  {
+                    user.receiveInfo
+                  }
+                </td>
+              </tr>
+            )
+          })
+        }
+        </tbody>
+      </table>
+    )
+  }
+}
 
 export default {
   oninit() {
     return (
       userModel.loadList()
     )
-  },
-
-  onupdate() {
-    console.log('updated')
   },
 
   view() {
@@ -27,17 +74,7 @@ export default {
           </div>
           <div class={'col-sm-12'}>
             {
-              userModel.storedUserList.map(function (user) {
-                return (
-                  <a
-                    class={'user-list-item'}
-                    href={'/' + user.nickname}
-                    oncreate={m.route.link}
-                  >
-                    {user.email + ' ' + user.nickname}
-                  </a>
-                )
-              })
+              _userListCtrl.getList()
             }
           </div>
         </div>

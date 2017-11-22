@@ -31,13 +31,13 @@ export default {
                 </li>
                 <ol>
                   <li>
-                    1. 모델 데이터(속성)에 Mithril stream을 적용 - 미적용
+                    TypeScript 사용 - 적용
                   </li>
                   <li>
-                    2. TypeScript 사용 - 적용
+                    CSS class를 local scope로 정의 - 적용
                   </li>
                   <li>
-                    3. CSS class를 local scope로 정의 - 적용
+                    모델 데이터(속성)에 Mithril stream을 적용 - 미적용
                   </li>
                 </ol>
               </ul>

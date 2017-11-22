@@ -1,12 +1,8 @@
 // Reference : https://www.typescriptlang.org/docs/handbook/compiler-options.html
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "Es6",
-      "Dom",
-      "ScriptHost"
-    ],
+    "target": "es5",
+    "module": "es6",
     "compilerOptions": {
       "moduleResolution": "node"
     },
@@ -14,11 +10,14 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
     "sourceMap": true,
-    "charset": "UTF8",
     "jsx": "react",
     "jsxFactory": "m",
     "watch": true
   },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
   "exclude": [
     "dist",
     "node_modules"

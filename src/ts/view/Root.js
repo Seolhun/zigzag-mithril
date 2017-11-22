@@ -1,6 +1,6 @@
 import m from 'mithril';
 export default {
-    view() {
+    view: function () {
         return (m("div", { class: 'container' },
             m("div", { class: 'row' },
                 m("div", { class: 'col-sm-12' },
@@ -19,9 +19,9 @@ export default {
                             m("li", null,
                                 m("h4", null, "\uC120\uD0DD\uC0AC\uD56D")),
                             m("ol", null,
-                                m("li", null, "1. \uBAA8\uB378 \uB370\uC774\uD130(\uC18D\uC131)\uC5D0 Mithril stream\uC744 \uC801\uC6A9 - \uBBF8\uC801\uC6A9"),
-                                m("li", null, "2. TypeScript \uC0AC\uC6A9 - \uC801\uC6A9"),
-                                m("li", null, "3. CSS class\uB97C local scope\uB85C \uC815\uC758 - \uC801\uC6A9"))))))));
+                                m("li", null, "TypeScript \uC0AC\uC6A9 - \uC801\uC6A9"),
+                                m("li", null, "CSS class\uB97C local scope\uB85C \uC815\uC758 - \uC801\uC6A9"),
+                                m("li", null, "\uBAA8\uB378 \uB370\uC774\uD130(\uC18D\uC131)\uC5D0 Mithril stream\uC744 \uC801\uC6A9 - \uBBF8\uC801\uC6A9"))))))));
     }
 };
 //# sourceMappingURL=Root.js.map

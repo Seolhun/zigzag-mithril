@@ -1,14 +1,14 @@
 import m from 'mithril';
-import 'assets/scss/agree/serviceAgree.scss';
+import localStyle from 'assets/scss/agree/serviceAgree.scss';
 import { userModel } from 'models/user/UserModel';
-const serviceAgreementComponent = {
+var serviceAgreementComponent = {
     isAllAgree: false,
     isSubmit: false,
-    oninit() {
+    oninit: function () {
         serviceAgreementComponent.isAllAgree = false;
         serviceAgreementComponent.isSubmit = false;
     },
-    oncreate() {
+    oncreate: function () {
         if (m.route.get().includes('registration')) {
             document.getElementById('sign-agreement').style.display = 'block';
         }
@@ -16,26 +16,26 @@ const serviceAgreementComponent = {
             document.getElementById('sign-agreement').style.display = 'none';
         }
     },
-    onupdate() {
+    onupdate: function () {
         serviceAgreementComponent.isAllAgree = !!(userModel.current.privateAgree && userModel.current.serviceAgree);
     },
-    submitAgree() {
+    submitAgree: function () {
         if (!userModel.current.serviceAgree) {
+            document.getElementById('serviceAgreeBtn').focus();
             alert('지그재그 서비스 제공 이용약관 (쇼핑몰 사업자용)에 동의해야 가입하실 수 있습니다.');
-            document.getElementById('serviceAgree').focus();
             return;
         }
         else if (!userModel.current.privateAgree) {
+            document.getElementById('privateAgreeBtn').focus();
             alert('개인정보처리방침에 동의해야 가입하실 수 있습니다.');
-            document.getElementById('privateAgree').focus();
             return;
         }
         serviceAgreementComponent.isSubmit = true;
     },
-    view() {
+    view: function () {
         return (m("section", { class: "content", id: 'sign-agreement' },
             m("h5", null, "\uC9C0\uADF8\uC7AC\uADF8 \uC11C\uBE44\uC2A4 \uC81C\uACF5 \uC774\uC6A9\uC57D\uAD00 (\uC1FC\uD551\uBAB0 \uC0AC\uC5C5\uC790\uC6A9)"),
-            m("div", { id: "agreement" },
+            m("div", { class: localStyle.agreement },
                 m("p", null,
                     m("strong", null, "\uC81C 1\uC7A5 \uCD1D\uCE59")),
                 m("p", null,
@@ -445,12 +445,12 @@ const serviceAgreementComponent = {
                 m("p", null, "\uC774 \uC57D\uAD00\uC740 2017\uB144 11\uC6D4 10\uC77C\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.")),
             m("div", { class: 'text-right' },
                 m("label", { class: 'checkbox-inline agree text-right' },
-                    m("input", { type: "checkbox", id: "serviceAgree", onclick: m.withAttr('value', value => {
+                    m("input", { type: "checkbox", id: "serviceAgreeBtn", onclick: m.withAttr('value', function (value) {
                             userModel.current.serviceAgree = !userModel.current.serviceAgree;
                         }), value: userModel.current.serviceAgree }),
                     "\uB3D9\uC758\uD569\uB2C8\uB2E4")),
             m("h5", null, "\uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68"),
-            m("div", { id: "privacy" },
+            m("div", { class: localStyle.agreement },
                 m("p", null,
                     m("strong", null, "\uAC1C\uC778\uC815\uBCF4 \uCC98\uB9AC\uBC29\uCE68")),
                 m("p", null,
@@ -724,7 +724,7 @@ const serviceAgreementComponent = {
                 m("p", null, "\uC774 \uAC1C\uC778\uC815\uBCF4\uCC98\uB9AC\uBC29\uCE68\uC740 2017\uB144 11\uC6D4 10\uC77C\uBD80\uD130 \uC801\uC6A9\uB429\uB2C8\uB2E4.")),
             m("div", { class: 'text-right' },
                 m("label", { class: 'checkbox-inline agree' },
-                    m("input", { type: "checkbox", id: "privateAgree", onclick: m.withAttr('value', value => {
+                    m("input", { type: "checkbox", id: "privateAgreeBtn", onclick: m.withAttr('value', function () {
                             userModel.current.privateAgree = !userModel.current.privateAgree;
                         }), value: userModel.current.privateAgree }),
                     "\uB3D9\uC758\uD569\uB2C8\uB2E4")),

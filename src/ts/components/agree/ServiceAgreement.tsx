@@ -1,5 +1,5 @@
 import m from 'mithril'
-import 'assets/scss/agree/serviceAgree.scss'
+import localStyle from 'assets/scss/agree/serviceAgree.scss'
 import {userModel} from 'models/user/UserModel'
 
 const serviceAgreementComponent = {
@@ -25,12 +25,12 @@ const serviceAgreementComponent = {
 
   submitAgree() {
     if (!userModel.current.serviceAgree) {
+      document.getElementById('serviceAgreeBtn').focus()
       alert('지그재그 서비스 제공 이용약관 (쇼핑몰 사업자용)에 동의해야 가입하실 수 있습니다.')
-      document.getElementById('serviceAgree').focus()
       return
     } else if (!userModel.current.privateAgree) {
+      document.getElementById('privateAgreeBtn').focus()
       alert('개인정보처리방침에 동의해야 가입하실 수 있습니다.')
-      document.getElementById('privateAgree').focus()
       return
     }
     serviceAgreementComponent.isSubmit = true
@@ -40,7 +40,7 @@ const serviceAgreementComponent = {
     return (
       <section class="content" id={'sign-agreement'}>
         <h5>지그재그 서비스 제공 이용약관 (쇼핑몰 사업자용)</h5>
-        <div id="agreement">
+        <div class={localStyle.agreement}>
           <p>
             <strong>제 1장 총칙</strong></p><p><strong>제 1 조 [목적]</strong></p><p>본 이용약관은 크로키닷컴 주식회사(이하 "<u>회사</u>"라 합니다)와 회사가
           운영하는 “지그재그(ZIGZAG)” 모바일 앱(이하 "<u>지그재그</u>"라 합니다)을 이용하여 자신의 상품, 재화 등을 광고하고 광고비용을 지급하는 자(이하 “<u>쇼핑몰</u> <u>사업자</u>”라 합니다) 사이에 회사와
@@ -290,7 +290,7 @@ const serviceAgreementComponent = {
           <label class={'checkbox-inline agree text-right'}>
             <input
               type="checkbox"
-              id="serviceAgree"
+              id="serviceAgreeBtn"
               onclick={m.withAttr('value', value => {
                 userModel.current.serviceAgree = !userModel.current.serviceAgree
               })}
@@ -301,7 +301,9 @@ const serviceAgreementComponent = {
         </div>
 
         <h5>개인정보처리방침</h5>
-        <div id="privacy"><p><strong>개인정보 처리방침</strong></p><p><strong>제 1장 총칙</strong></p><p><strong>제 1 조 [기본 원칙]</strong></p><p>크로키닷컴
+        <div class={localStyle.agreement}>
+          <p><strong>개인정보 처리방침</strong></p><p><strong>제 1장 총칙</strong></p><p><strong>제 1 조 [기본 원칙]</strong>
+        </p><p>크로키닷컴
           주식회사(이하 "<u>회사</u>"라 합니다)는 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 통신비밀보호법, 전기통신사업법, 개인정보보호법 등 정보통신서비스제공자가 준수하여야 할 관련 법령상의 개인정보보호 규정을 준수하며, 관련
           법령에 의거한 개인정보처리방침을 정하여 쇼핑몰 사업자 권익 보호에 최선을 다하고 있습니다.</p><p>본 개인정보처리방침에서 사용된 용어의 의미는 특별한 규정이 없는 한&nbsp;<strong>지그재그 서비스 제공 이용약관(쇼핑몰
           사업자용)</strong>과 동일합니다.</p><p>&nbsp;</p><p><strong>제 2장 수집하는 개인정보의 항목 및 수집방법</strong></p><p><strong>제 2 조 [최초 서비스 가입신청 시 수집하는
@@ -507,8 +509,8 @@ const serviceAgreementComponent = {
           <label class={'checkbox-inline agree'}>
             <input
               type="checkbox"
-              id="privateAgree"
-              onclick={m.withAttr('value', value => {
+              id="privateAgreeBtn"
+              onclick={m.withAttr('value', () => {
                 userModel.current.privateAgree = !userModel.current.privateAgree
               })}
               value={userModel.current.privateAgree}

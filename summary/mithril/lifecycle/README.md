@@ -2,24 +2,25 @@
 ---
 ### Mithril LifeCycle
 - oninit
-    - The oninit(vnode) hook is called before a vnode is touched by the virtual DOM engine. oninit is guaranteed to run before its DOM element is attached to the document, and it is guaranteed to run on parent vnodes before their children, but it does not offer any guarantees regarding the existence of ancestor or descendant DOM elements. You should never access the vnode.dom from the oninit method.
-    - Example
-        ```javascript
-        var ComponentWithState = {
-            oninit: function(vnode) {
-                this.data = vnode.attrs.data
-            },
-            view: function() {
-                return m("div", this.data) // displays data from initialization time
-            }
-        }
-        m(ComponentWithState, {data: "Hello"})
-        // Equivalent HTML
-        // <div>Hello</div>
-        ```
+    - onnit (vnode) 훅은 vnode가 가상 DOM 엔진에 의해 접촉되기 전에 호출됩니다.
+    - oninit는 DOM 요소가 문서에 첨부되기 전에 실행되며 자식보다 먼저 부모 vnode에서 실행되도록 보장되지만 조상 또는 하위 DOM 요소의 존재에 대한 보장은 제공하지 않습니다. 
+    - onnit 메서드에서 vnode.dom에 액세스하면 안됩니다.
+      ```javascript
+      var ComponentWithState = {
+          oninit: function(vnode) {
+              this.data = vnode.attrs.data
+          },
+          view: function() {
+              return m("div", this.data) // displays data from initialization time
+          }
+      }
+      m(ComponentWithState, {data: "Hello"})
+      // Equivalent HTML
+      // <div>Hello</div>
+      ```
 - oncreate
-    - The oncreate(vnode) hook is called after a DOM element is created and attached to the document. oncreate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
+    - oncreate (vnode) 훅은 DOM 요소가 생성되어 문서에 첨부 된 후에 호출됩니다. 
+    - oncreate는 렌더링 사이클의 끝에서 실행되도록 보장되므로이 메소드에서 vnode.dom.offsetHeight 및 vnode.dom.getBoundingClientRect ()와 같은 레이아웃 값을 읽는 것이 안전합니다.
         ```javascript
         var HeightReporter = {
             oncreate: function(vnode) {
@@ -30,8 +31,8 @@
         m(HeightReporter, {data: "Hello"})
         ```
 - onupdate
-    - The onupdate(vnode) hook is called after a DOM element is updated, while attached to the document. onupdate is guaranteed to run at the end of the render cycle, so it is safe to read layout values such as vnode.dom.offsetHeight and vnode.dom.getBoundingClientRect() from this method.
-    - Example
+    - onupdate (vnode) 훅은 문서에 첨부되어있는 동안 DOM 요소가 업데이트 된 후에 호출됩니다.
+    - onupdate는 렌더링 사이클의 끝에서 실행되도록 보장되므로이 메소드에서 vnode.dom.offsetHeight 및 vnode.dom.getBoundingClientRect ()와 같은 레이아웃 값을 읽는 것이 안전합니다.
         ```javascript
         var RedrawReporter = {
             count: 0,
@@ -43,8 +44,8 @@
         m(RedrawReporter, {data: "Hello"})
         ```
 - onbeforeremove
-    - The onbeforeremove(vnode) hook is called before a DOM element is detached from the document. If a Promise is returned, Mithril only detaches the DOM element after the promise completes.
-    - Example
+    - DOM 요소가 문서에서 분리되기 전에 onbeforeremove (vnode) 후크가 호출됩니다.
+    - Promise가 반환되면 Mithril은 약속이 완료된 후에 만 DOM 요소를 분리합니다.
         ```javascript
         var Fader = {
             onbeforeremove: function(vnode) {
@@ -59,7 +60,8 @@
         }
         ```
 - onremove
-    - The onremove(vnode) hook is called before a DOM element is removed from the document. If a onbeforeremove hook is also defined, the onremove hook runs after the promise returned from onbeforeremove is completed.
+    - DOM 요소가 문서에서 제거되기 전에 onremove (vnode) 훅이 호출됩니다.
+    - onbeforeremove 훅도 정의 된 경우 onbeforeremove에서 반환 된 약속이 완료된 후에 onremove 훅이 실행됩니다.
     - Example
         ```javascript
         var Timer = {
@@ -75,4 +77,5 @@
         }
         ```
 - onbeforeupdate
-    - The onbeforeupdate(vnode, old) hook is called before a vnode is diffed in a update. If this function is defined and returns false, Mithril prevents a diff from happening to the vnode, and consequently to the vnode's children.
+    - 업데이트에서 vnode가 diff되기 전에 onbeforeupdate (vnode, old) 훅이 호출됩니다. 
+    - 이 함수가 정의되고 false를 반환하면 Mithril은 vnode 및 결과적으로 vnode의 자식에 대한 diff를 방지합니다.

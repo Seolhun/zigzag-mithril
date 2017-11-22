@@ -7,13 +7,16 @@
 
 ---
 ### How to run this porject
-1. Dev run
+1. npm install
+- npm install 
+
+2. Dev run
 - npm run dev
 
-2. Prod build
+3. Prod build
 - npm build
-	1. dist directory 안에 빌드된 결과가 나옵니다.
-	2. dist 안에 있는 static과 index.html을 배포합니다.
+  1. dist directory 안에 빌드된 결과가 나옵니다.
+  2. dist 안에 있는 static과 index.html을 배포합니다.
 
 ---
 ### Building Mithril on vue-cli without vue
@@ -22,54 +25,36 @@
   2. Vue에 익숙하여 Vue-Cli에 잘 적용된 Webpack 설정을 가져오면 어렵지 않게 Mithril 개발의 환경을 비슷하게 적용할 수 있지 않을까란 생각을 하였습니다.
   
 - 결과
-	- 실행에 옮겨 이와 같은 프로젝트 결과를 얻을 수 있었습니다.
-	- 그래서, 각각의 설정방법과 Packages관련한 설정정보를 정리하고자 합니다.
+  - 실행에 옮겨 이와 같은 프로젝트 결과를 얻을 수 있었습니다.
+  - 개발서버 및 빌드까지 완료하였습니다.
+  - S3간단히 배포하여봤습니다.[AWS - S3 테스트](https://s3.ap-northeast-2.amazonaws.com/hi-cord/index.html#!/)
+  - summary 폴더에 간단한 것을 정리했습니다. 작업양을 늘리다보니, 필요한 문서화를 더 못한 것이 아쉽습니다
 
+- BootStrap을 CDN으로 사용하였고, NavBar로 인해 JQuery를 CDN으로 넣었기만 하고 사용하지는 않았습니다
 ---
-### - Mithril 공식사이트에서 기재된 방법입니다.
-- [Mithril.js](https://mithril.js.org/installation.html)
-1. npm init --yes
-- creates a file called package.json
-
-2. npm install mithril --save
-
-3. Path config
-- $ mkdir src
-- $ touch index.js
-```javascript
-index.js
-var m = require("mithril")
-
-m.render(document.body, "hello world")
-```
-4. npm install webpack --save-dev
-
-5. Open the **package.json** that you created earlier, and add an entry to the scripts section:
-```json
-{
-    "name": "my-project-name",
-    "scripts": {
-        "start": index.js
-    }
-}
-```
-
-7. npm start
-
-8. touch index.html
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>My Application</title>
-</head>
-<body>
-<script src="bin/app.js"></script>
-</body>
-</html>
-```
-
----
-### [TypeScript](https://github.com/MithrilJS/mithril.d.ts)
+### 프로젝트 결과물
+- 주제
+  - UserForm 만들기
+- 사항
+  - 필수사항
+    - 한개 이상의 서브 컴포넌트를 사용해주세요. - 적용(Header, Detail, Agreement...)
+  - 선택사항
+    - TypeScript 사용 - 적용
+    - CSS class를 local scope로 정의 - 적용
+    - 모델 데이터(속성)에 Mithril stream을 적용 - 미적용
+- 개요
+  - JSX와 TypeScript 활용
+  - Router 사용
+  - Header, Detail을 Sub Component로 UserForm과 함께 구성 
+  - LocalStorage를 통한 프론트 구성 (검색, 리스트, 저장, 삭제 가능)
+  
+- 문제점(개인적인 의견과 사실)
+  - TypeScript의 Interface 활용을 통한 초기값의 undefined 문제
+  - m.withAttr의 한정적인 요소로 인해 스크립트와 태그 사용의 애매함으로 인한 어려움.
+  - m.withAttr을 사용하지 않고, 해당 스크립트를 바로 선언하면 라우터 이동 간 해당 태그가 생성되면서 메소드가 호출되는 문제가 발생되었었습니다.
+  
+- 느낀점
+  - TypeScript의 속성은 기존 Java와 비슷하지만 또 조금 다른 차이를 느낄 수 있었습니다.
+  - mount의 라이프사이클을 따로 두고 있지않아, onupdate에서 이벤트 주는 부분에 어려움이 있었습니다.
+  - JSX와 TypeScript에 익숙해지면 TypeScript(JavaScript)를 통한 팀원 간의 코드의 통일을 이루기 쉬울 것으로 생각합니다.
+  - TypeScript > ES5~6 > Babel > WebPack의 순환구조를 깊게 이해할 필요를 느꼈습니다. 

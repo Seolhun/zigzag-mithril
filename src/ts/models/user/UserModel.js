@@ -1,9 +1,37 @@
 import m from 'mithril';
-const userModel = {
-    searchUserList: [],
+import { commonCtrl } from '../../../index';
+var userModel = {
+    list: [],
     storedUserList: [],
-    loadList() {
-        userModel.storedUserList = userModel.getFromStrage('userList');
+    isValid: function () {
+        // Interface?
+        console.log(userModel.current.email);
+        if (userModel.current.email === undefined) {
+            alert('이메일을 입력해주세요.');
+            return true;
+        }
+        else if (!commonCtrl.isNickname(userModel.current.nickname)) {
+            alert('닉네임 값이 올바르지 않습니다.');
+            return true;
+        }
+        else if (userModel.current.password === undefined) {
+            alert('비밀번호를 입력해주세요.');
+            return true;
+        }
+        else if (userModel.current.sex === undefined) {
+            alert('성별을 골라주세요');
+            return true;
+        }
+        else if (userModel.current.styles === undefined) {
+            userModel.current.styles = [];
+        }
+        else if (userModel.current.receiveInfo === undefined) {
+            userModel.current.receiveInfo = [];
+        }
+        return false;
+    },
+    loadList: function () {
+        userModel.storedUserList = userModel.getFromStroage('userList');
         if (userModel.storedUserList === null) {
             userModel.storedUserList = [];
         }
@@ -18,8 +46,8 @@ const userModel = {
     },
     // Current User
     current: {},
-    getByNickname(nickname) {
-        userModel.current = userModel.getFromStrage(nickname);
+    getByNickname: function (nickname) {
+        userModel.current = userModel.getFromStroage(nickname);
         if (userModel.current === null) {
             userModel.current = {};
         }
@@ -32,7 +60,11 @@ const userModel = {
         //   userModel.current = result
         // })
     },
-    save() {
+    save: function () {
+        //UserForm Validation
+        if (this.isValid()) {
+            return;
+        }
         userModel.storedUserList.push(userModel.current);
         userModel.setIntoStorageOne();
         userModel.setIntoStorageList();
@@ -47,13 +79,22 @@ const userModel = {
         //   withCredentials: true
         // })
     },
-    getFromStrage(key) {
+    removeFromStroage: function (key) {
+        commonCtrl.removeFromList(userModel.storedUserList, key);
+        if (confirm("삭제하시겠습니까?")) {
+            userModel.setIntoStorageList();
+            localStorage.removeItem(key);
+            alert(key + '님이 정상적으로 삭제되었습니다.');
+            m.route.set('/list');
+        }
+    },
+    getFromStroage: function (key) {
         return JSON.parse(localStorage.getItem(key));
     },
-    setIntoStorageList() {
+    setIntoStorageList: function () {
         localStorage.setItem('userList', JSON.stringify(userModel.storedUserList));
     },
-    setIntoStorageOne() {
+    setIntoStorageOne: function () {
         localStorage.setItem(userModel.current.nickname, JSON.stringify(userModel.current));
     }
 };
