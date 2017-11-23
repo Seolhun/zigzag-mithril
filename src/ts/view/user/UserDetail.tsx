@@ -20,8 +20,8 @@ const _userDetailCtrl = {
         </p>
         <p>How to received Information</p>
         <ul>
-          {
-            userModel.current.receiveInfo !== null ? <li>Nothing want.</li> : userModel.current.receiveInfo.map(function (value) {
+          {userModel.current.receiveInfo === null ?
+            <li>Nothing want.</li> : userModel.current.receiveInfo.map(function (value) {
               return (
                 <li>
                   {value}
