@@ -26,7 +26,8 @@ var _userDetailCtrl = {
                 "Information: ",
                 userModel.current.description),
             m("p", null, "How to received Information"),
-            m("ul", null, userModel.current.receiveInfo !== null ? m("li", null, "Nothing want.") : userModel.current.receiveInfo.map(function (value) {
+            m("ul", null, userModel.current.receiveInfo === null ?
+                m("li", null, "Nothing want.") : userModel.current.receiveInfo.map(function (value) {
                 return (m("li", null, value));
             })),
             m("p", null,
