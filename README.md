@@ -14,7 +14,7 @@
 - npm run dev
 
 3. Prod build
-- npm build
+- npm run build
   1. dist directory 안에 빌드된 결과가 나옵니다.
   2. dist 안에 있는 static과 index.html을 배포합니다.
 
