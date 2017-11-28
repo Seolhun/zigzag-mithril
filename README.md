@@ -61,12 +61,10 @@
       sex: string
       styles: string[]
       receiveInfo: string[]
-    
       privateAgree: boolean
       serviceAgree: boolean
       createdDate: Date
     }
-    
     class Client implements User {
       nickname: string
       email: string
@@ -76,11 +74,9 @@
       sex: string
       styles: string[]
       receiveInfo: string[]
-    
       privateAgree: boolean
       serviceAgree: boolean
       createdDate: Date
-    
       constructor() {
         this.nickname = null
         this.email = null
@@ -95,8 +91,7 @@
         this.createdDate = null
       }
     }
-    
-    // new로 생성하지않으면 초기값이 존재하지 않는다.
+    //new로 생성하지않으면 초기값이 존재하지 않는다.
     let client = new Client()
     let client2 = {} as Client
     console.log(client)
