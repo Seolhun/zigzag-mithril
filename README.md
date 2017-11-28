@@ -50,8 +50,8 @@
   
 - 문제점(개인적인 의견과 사실)
   - TypeScript의 Interface 활용을 통한 초기값의 undefined 문제
-  - ** 해결책 Example**
-    ```typescript
+  - ** 해결책 Example**
+    ```typescript
     interface User {
       id : string;
       name: string;
