@@ -12,6 +12,7 @@ var _userFormCtrl = {
     isChecked: function (value) {
         // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
         if (!this.isRegister()) {
+            console.log(userModel.current.receiveInfo);
             if (userModel.current.receiveInfo !== undefined) {
                 return userModel.current.receiveInfo.indexOf(value) !== -1;
             }

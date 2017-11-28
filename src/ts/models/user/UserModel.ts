@@ -16,29 +16,55 @@ interface User {
   createdDate: Date
 }
 
+class Client implements User {
+  nickname: string
+  email: string
+  password: string
+  birth: Date
+  description: string
+  sex: string
+  styles: string[]
+  receiveInfo: string[]
+
+  privateAgree: boolean
+  serviceAgree: boolean
+  createdDate: Date
+
+  constructor() {
+    this.nickname = null
+    this.email = null
+    this.password = null
+    this.birth = null
+    this.description = null
+    this.sex = null
+    this.styles = []
+    this.receiveInfo = []
+    this.privateAgree = false
+    this.serviceAgree = false
+    this.createdDate = null
+  }
+}
+
 const userModel = {
-  list: [] as User[],
-  storedUserList: [] as User[],
+  list: [] as Client[],
+  storedUserList: [] as Client[],
+  current: new Client(),
 
   isValid(): boolean {
     // Interface?
     console.log(userModel.current.email)
-    if (userModel.current.email === undefined) {
+    if (userModel.current.email === null) {
       alert('이메일을 입력해주세요.')
       return true
     } else if (!commonCtrl.isNickname(userModel.current.nickname)) {
       alert('닉네임 값이 올바르지 않습니다.')
       return true
-    } else if (userModel.current.password === undefined) {
+    } else if (userModel.current.password === null) {
       alert('비밀번호를 입력해주세요.')
       return true
-    } else if (userModel.current.sex === undefined) {
+    } else if (userModel.current.sex === null) {
       alert('성별을 골라주세요')
       return true
-    } else if (userModel.current.styles === undefined) {
-      userModel.current.styles = []
-    } else if (userModel.current.receiveInfo === undefined) {
-      userModel.current.receiveInfo = []
     }
     return false
   },
@@ -46,7 +72,7 @@ const userModel = {
   loadList(): void {
     userModel.storedUserList = userModel.getFromStroage('userList')
     if (userModel.storedUserList === null) {
-      userModel.storedUserList = [] as User[]
+      userModel.storedUserList = [] as Client[]
     }
     //----------API Call Examples----------
     // return m.request<{ data: User[] }>({
@@ -59,11 +85,10 @@ const userModel = {
   },
 
   // Current User
-  current: {} as User,
   getByNickname(nickname: string): void {
     userModel.current = userModel.getFromStroage(nickname)
     if (userModel.current === null) {
-      userModel.current = {} as User
+      userModel.current = new Client()
     }
     //----------API Call Examples----------
     // return m.request<User>({
@@ -83,11 +108,11 @@ const userModel = {
 
     userModel.storedUserList.push(userModel.current)
     userModel.setIntoStorageOne()
-    userModel.setIntoStorageList()
+    userModel.setIntoStorageList(userModel.storedUserList)
 
     alert(userModel.current.nickname + '님 ZIGZAG에 오신것을 환영합니다.')
     m.route.set('/' + userModel.current.nickname)
-    userModel.current = {} as User
+    userModel.current = new Client()
     //----------API Call Examples----------
     // return m.request({
     //   method: 'PUT',
@@ -99,8 +124,8 @@ const userModel = {
 
   removeFromStroage(key): void {
     commonCtrl.removeFromList(userModel.storedUserList, key)
-    if (confirm("삭제하시겠습니까?")) {
-      userModel.setIntoStorageList()
+    if (confirm('삭제하시겠습니까?')) {
+      userModel.setIntoStorageList(userModel.storedUserList)
       localStorage.removeItem(key)
       alert(key + '님이 정상적으로 삭제되었습니다.')
       m.route.set('/list')
@@ -111,8 +136,8 @@ const userModel = {
     return JSON.parse(localStorage.getItem(key))
   },
 
-  setIntoStorageList(): void {
-    localStorage.setItem('userList', JSON.stringify(userModel.storedUserList))
+  setIntoStorageList(userList: Client[]): void {
+    localStorage.setItem('userList', JSON.stringify(userList))
   },
 
   setIntoStorageOne(): void {
@@ -120,4 +145,4 @@ const userModel = {
   }
 }
 
-export {User, userModel}
+export {Client, userModel}

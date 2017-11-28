@@ -1,5 +1,5 @@
 import m from 'mithril';
-import { userModel } from 'models/user/UserModel';
+import { userModel } from '../../models/user/UserModel';
 //Private Methods. Never export this object.
 var _userDetailCtrl = {
     isDetail: function () {
@@ -26,7 +26,7 @@ var _userDetailCtrl = {
                 "Information: ",
                 userModel.current.description),
             m("p", null, "How to received Information"),
-            m("ul", null, userModel.current.receiveInfo === null ?
+            m("ul", null, userModel.current.receiveInfo.length < 1 ?
                 m("li", null, "Nothing want.") : userModel.current.receiveInfo.map(function (value) {
                 return (m("li", null, value));
             })),
