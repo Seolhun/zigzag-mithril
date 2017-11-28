@@ -1,6 +1,6 @@
 import m from 'mithril'
 import localStyle from 'assets/scss/user/user.scss'
-import {User, userModel} from 'models/user/UserModel'
+import {Client, userModel} from 'models/user/UserModel'
 import {serviceAgreementComponent} from 'components/agree/ServiceAgreement'
 import {commonCtrl} from '../../../index'
 
@@ -15,6 +15,7 @@ const _userFormCtrl = {
   isChecked(value): boolean {
     // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
     if (!this.isRegister()) {
+      console.log(userModel.current.receiveInfo)
       if (userModel.current.receiveInfo !== undefined) {
         return userModel.current.receiveInfo.indexOf(value) !== -1
       }
@@ -70,7 +71,7 @@ export const userForm = {
 
     //receiveInfo를 []로 이용해주지 않으면 에러가 있음. interface 문제인지 널일시 function값이 들어가는 현상
     if (_userFormCtrl.isRegister()) {
-      userModel.current = {} as User
+      userModel.current = {} as Client
       userModel.current.receiveInfo = []
     } else {
       userModel.getByNickname(vnode.attrs.nickname)

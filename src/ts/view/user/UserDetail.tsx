@@ -1,5 +1,5 @@
 import m from 'mithril'
-import {User, userModel} from 'models/user/UserModel'
+import {Client, userModel} from '../../models/user/UserModel'
 
 //Private Methods. Never export this object.
 const _userDetailCtrl = {
@@ -20,7 +20,7 @@ const _userDetailCtrl = {
         </p>
         <p>How to received Information</p>
         <ul>
-          {userModel.current.receiveInfo === null ?
+          {userModel.current.receiveInfo.length < 1 ?
             <li>Nothing want.</li> : userModel.current.receiveInfo.map(function (value) {
               return (
                 <li>
@@ -37,8 +37,7 @@ const _userDetailCtrl = {
             class={'btn btn-danger'}
             onclick={m.withAttr('value', () => {
               userModel.removeFromStroage(userModel.current.nickname)
-            })
-            }
+            })}
           >
             Delete
           </button>
@@ -73,5 +72,5 @@ export default {
       </div>
     )
   }
-} as m.Component<User, {}>
+} as m.Component<Client, {}>
 

@@ -1,12 +1,29 @@
 import m from 'mithril';
 import { commonCtrl } from '../../../index';
+var Client = /** @class */ (function () {
+    function Client() {
+        this.nickname = null;
+        this.email = null;
+        this.password = null;
+        this.birth = null;
+        this.description = null;
+        this.sex = null;
+        this.styles = [];
+        this.receiveInfo = [];
+        this.privateAgree = false;
+        this.serviceAgree = false;
+        this.createdDate = null;
+    }
+    return Client;
+}());
 var userModel = {
     list: [],
     storedUserList: [],
+    current: new Client(),
     isValid: function () {
         // Interface?
         console.log(userModel.current.email);
-        if (userModel.current.email === undefined) {
+        if (userModel.current.email === null) {
             alert('이메일을 입력해주세요.');
             return true;
         }
@@ -14,19 +31,13 @@ var userModel = {
             alert('닉네임 값이 올바르지 않습니다.');
             return true;
         }
-        else if (userModel.current.password === undefined) {
+        else if (userModel.current.password === null) {
             alert('비밀번호를 입력해주세요.');
             return true;
         }
-        else if (userModel.current.sex === undefined) {
+        else if (userModel.current.sex === null) {
             alert('성별을 골라주세요');
             return true;
-        }
-        else if (userModel.current.styles === undefined) {
-            userModel.current.styles = [];
-        }
-        else if (userModel.current.receiveInfo === undefined) {
-            userModel.current.receiveInfo = [];
         }
         return false;
     },
@@ -45,11 +56,10 @@ var userModel = {
         // })
     },
     // Current User
-    current: {},
     getByNickname: function (nickname) {
         userModel.current = userModel.getFromStroage(nickname);
         if (userModel.current === null) {
-            userModel.current = {};
+            userModel.current = new Client();
         }
         //----------API Call Examples----------
         // return m.request<User>({
@@ -67,10 +77,10 @@ var userModel = {
         }
         userModel.storedUserList.push(userModel.current);
         userModel.setIntoStorageOne();
-        userModel.setIntoStorageList();
+        userModel.setIntoStorageList(userModel.storedUserList);
         alert(userModel.current.nickname + '님 ZIGZAG에 오신것을 환영합니다.');
         m.route.set('/' + userModel.current.nickname);
-        userModel.current = {};
+        userModel.current = new Client();
         //----------API Call Examples----------
         // return m.request({
         //   method: 'PUT',
@@ -81,8 +91,8 @@ var userModel = {
     },
     removeFromStroage: function (key) {
         commonCtrl.removeFromList(userModel.storedUserList, key);
-        if (confirm("삭제하시겠습니까?")) {
-            userModel.setIntoStorageList();
+        if (confirm('삭제하시겠습니까?')) {
+            userModel.setIntoStorageList(userModel.storedUserList);
             localStorage.removeItem(key);
             alert(key + '님이 정상적으로 삭제되었습니다.');
             m.route.set('/list');
@@ -91,12 +101,12 @@ var userModel = {
     getFromStroage: function (key) {
         return JSON.parse(localStorage.getItem(key));
     },
-    setIntoStorageList: function () {
-        localStorage.setItem('userList', JSON.stringify(userModel.storedUserList));
+    setIntoStorageList: function (userList) {
+        localStorage.setItem('userList', JSON.stringify(userList));
     },
     setIntoStorageOne: function () {
         localStorage.setItem(userModel.current.nickname, JSON.stringify(userModel.current));
     }
 };
-export { userModel };
+export { Client, userModel };
 //# sourceMappingURL=UserModel.js.map
