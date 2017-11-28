@@ -96,7 +96,7 @@
       }
     }
     
-    // new로 생성하지않으면 초기값이 존재자힞 않는다.
+    // new로 생성하지않으면 초기값이 존재하지 않는다.
     let client = new Client()
     let client2 = {} as Client
     console.log(client)
