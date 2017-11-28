@@ -50,6 +50,23 @@
   
 - 문제점(개인적인 의견과 사실)
   - TypeScript의 Interface 활용을 통한 초기값의 undefined 문제
+  - ** 해결책 Example**
+    ```typescript
+    interface User {
+      id : string;
+      name: string;
+    }
+
+    class Client implements User {
+      id : string;
+      name: string;
+      list: User[]
+      constructor(name, list) {
+        this.name = name || "SeolHun"
+        this.list = list || [] as User[]
+      }
+    }
+    ```
   - m.withAttr의 한정적인 요소로 인해 스크립트와 태그 사용의 애매함으로 인한 어려움.
   - m.withAttr을 사용하지 않고, 해당 스크립트를 바로 선언하면 라우터 이동 간 해당 태그가 생성되면서 메소드가 호출되는 문제가 발생되었었습니다.
   
