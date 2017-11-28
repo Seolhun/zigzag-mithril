@@ -50,7 +50,7 @@
   
 - 문제점(개인적인 의견과 사실)
   - TypeScript의 Interface 활용을 통한 초기값의 undefined 문제
-  - ** 해결책 Example**
+  - ** 해결책 Example **
     ```typescript
     interface User {
       nickname: string
@@ -61,12 +61,10 @@
       sex: string
       styles: string[]
       receiveInfo: string[]
-    
       privateAgree: boolean
       serviceAgree: boolean
       createdDate: Date
     }
-    
     class Client implements User {
       nickname: string
       email: string
@@ -76,11 +74,9 @@
       sex: string
       styles: string[]
       receiveInfo: string[]
-    
       privateAgree: boolean
       serviceAgree: boolean
       createdDate: Date
-    
       constructor() {
         this.nickname = null
         this.email = null
@@ -95,13 +91,13 @@
         this.createdDate = null
       }
     }
-    
-    // new로 생성하지않으면 초기값이 존재하지 않는다.
+    //new로 생성하지않으면 초기값이 존재하지 않는다.
     let client = new Client()
     let client2 = {} as Client
     console.log(client)
     console.log(client2)
     ```
+    
   - m.withAttr의 한정적인 요소로 인해 스크립트와 태그 사용의 애매함으로 인한 어려움.
   - m.withAttr을 사용하지 않고, 해당 스크립트를 바로 선언하면 라우터 이동 간 해당 태그가 생성되면서 메소드가 호출되는 문제가 발생되었었습니다.
   
