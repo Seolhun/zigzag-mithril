@@ -1,13 +1,13 @@
 import m from 'mithril';
-import localStyle from 'assets/scss/user/user.scss';
-import { userModel } from 'models/user/UserModel';
-import { serviceAgreementComponent } from 'components/agree/ServiceAgreement';
+import localStyle from '../../../assets/scss/user/user.scss';
+import { userModel } from '../../models/user/UserModel';
+import { serviceAgreementComponent } from '../../components/agree/ServiceAgreement';
 import { commonCtrl } from '../../../index';
-import UserDetail from 'view/user/UserDetail';
+import UserDetail from '../../view/user/UserDetail';
 //Private Methods. Never export this object.
 var _userFormCtrl = {
     isRegister: function () {
-        return m.route.get().includes('registration');
+        return m.route.get().indexOf('registration') !== -1;
     },
     isChecked: function (value) {
         // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1

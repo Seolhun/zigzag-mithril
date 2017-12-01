@@ -1,6 +1,6 @@
 import m from 'mithril';
-import localStyle from 'assets/scss/user/user.scss';
-import { userModel } from 'models/user/UserModel';
+import localStyle from '../../../assets/scss/user/user.scss';
+import { userModel } from '../../models/user/UserModel';
 var _userListCtrl = {
     getList: function () {
         if (userModel.storedUserList.length < 1) {

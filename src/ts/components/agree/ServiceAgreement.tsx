@@ -1,6 +1,6 @@
 import m from 'mithril'
-import localStyle from 'assets/scss/agree/serviceAgree.scss'
-import {userModel} from 'models/user/UserModel'
+import localStyle from '../../../assets/scss/agree/serviceAgree.scss'
+import {userModel} from '../../models/user/UserModel'
 
 const serviceAgreementComponent = {
   isAllAgree: false,
@@ -12,7 +12,7 @@ const serviceAgreementComponent = {
   },
 
   oncreate() {
-    if (m.route.get().includes('registration')) {
+    if (m.route.get().indexOf('registration') !== -1) {
       document.getElementById('sign-agreement').style.display = 'block'
     } else {
       document.getElementById('sign-agreement').style.display = 'none'

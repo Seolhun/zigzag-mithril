@@ -1,8 +1,8 @@
 import m from 'mithril';
-import Root from 'view/Root';
-import UserList from 'view/user/UserList';
-import { userForm } from 'view/user/UserForm';
-import UserDetail from 'view/user/UserDetail';
+import Root from '../view/Root';
+import UserList from '../view/user/UserList';
+import { userForm } from '../view/user/UserForm';
+import UserDetail from '../view/user/UserDetail';
 /**
  * @Referenece : https://mithril.js.org/route.html;
  * */
