@@ -1,15 +1,15 @@
 import m from 'mithril'
-import localStyle from 'assets/scss/user/user.scss'
-import {Client, userModel} from 'models/user/UserModel'
-import {serviceAgreementComponent} from 'components/agree/ServiceAgreement'
+import localStyle from '../../../assets/scss/user/user.scss'
+import {Client, userModel} from '../../models/user/UserModel'
+import {serviceAgreementComponent} from '../../components/agree/ServiceAgreement'
 import {commonCtrl} from '../../../index'
 
-import UserDetail from 'view/user/UserDetail'
+import UserDetail from '../../view/user/UserDetail'
 
 //Private Methods. Never export this object.
 const _userFormCtrl = {
   isRegister(): boolean {
-    return m.route.get().includes('registration')
+    return m.route.get().indexOf('registration') !== -1
   },
 
   isChecked(value): boolean {

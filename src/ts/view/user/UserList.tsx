@@ -1,6 +1,6 @@
 import m from 'mithril'
-import localStyle from 'assets/scss/user/user.scss'
-import {User, userModel} from 'models/user/UserModel'
+import localStyle from '../../../assets/scss/user/user.scss'
+import {Client, userModel} from '../../models/user/UserModel'
 
 const _userListCtrl = {
   getList() {
@@ -81,4 +81,4 @@ export default {
       </div>
     )
   }
-} as m.Component<User, {}>
+} as m.Component<Client, {}>

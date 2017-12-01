@@ -1,6 +1,6 @@
 import m from 'mithril'
 import 'assets/scss/layout/header.scss'
-import {userModel} from 'models/user/UserModel'
+import {userModel} from '../../models/user/UserModel'
 
 // Public method To use anywhere.
 const headerCtrl = {

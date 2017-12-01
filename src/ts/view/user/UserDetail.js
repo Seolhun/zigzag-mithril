@@ -3,7 +3,15 @@ import { userModel } from '../../models/user/UserModel';
 //Private Methods. Never export this object.
 var _userDetailCtrl = {
     isDetail: function () {
-        return !(m.route.get().includes('registration'));
+        return !(m.route.get().indexOf('registration') !== -1);
+    },
+    showDeleteBtn: function () {
+        if (this.isDetail()) {
+            return (m("div", null,
+                m("button", { class: 'btn btn-danger', onclick: m.withAttr('value', function () {
+                        userModel.removeFromStroage(userModel.current.nickname);
+                    }) }, "Delete")));
+        }
     },
     showDetailData: function () {
         return (m("div", { class: "panel-body" },
@@ -38,10 +46,7 @@ var _userDetailCtrl = {
                 "Private Agreement: ",
                 userModel.current.privateAgree,
                 " "),
-            m("div", null,
-                m("button", { class: 'btn btn-danger', onclick: m.withAttr('value', function () {
-                        userModel.removeFromStroage(userModel.current.nickname);
-                    }) }, "Delete"))));
+            _userDetailCtrl.showDeleteBtn()));
     },
 };
 export default {

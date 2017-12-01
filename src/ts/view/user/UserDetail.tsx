@@ -4,7 +4,24 @@ import {Client, userModel} from '../../models/user/UserModel'
 //Private Methods. Never export this object.
 const _userDetailCtrl = {
   isDetail() {
-    return !(m.route.get().includes('registration'))
+    return !(m.route.get().indexOf('registration') !== -1)
+  },
+
+  showDeleteBtn() {
+    if (this.isDetail()) {
+      return (
+        <div>
+          <button
+            class={'btn btn-danger'}
+            onclick={m.withAttr('value', () => {
+              userModel.removeFromStroage(userModel.current.nickname)
+            })}
+          >
+            Delete
+          </button>
+        </div>
+      )
+    }
   },
 
   showDetailData() {
@@ -32,16 +49,9 @@ const _userDetailCtrl = {
         </ul>
         <p>Service Agreement: {userModel.current.serviceAgree} </p>
         <p>Private Agreement: {userModel.current.privateAgree} </p>
-        <div>
-          <button
-            class={'btn btn-danger'}
-            onclick={m.withAttr('value', () => {
-              userModel.removeFromStroage(userModel.current.nickname)
-            })}
-          >
-            Delete
-          </button>
-        </div>
+        {
+          _userDetailCtrl.showDeleteBtn()
+        }
       </div>
     )
   },
