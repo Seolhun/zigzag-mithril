@@ -1,22 +1,15 @@
 import m from 'mithril';
 import localStyle from '../../../assets/scss/user/user.scss';
-import { userModel } from '../../models/user/UserModel';
-import { serviceAgreementComponent } from '../../components/agree/ServiceAgreement';
+import { Client, userModel } from '../../models/user/UserModel';
 import { commonCtrl } from '../../../index';
-import UserDetail from '../../view/user/UserDetail';
+import stream from 'mithril/stream';
+//--------------------------------------------
 //Private Methods. Never export this object.
 var _userFormCtrl = {
-    isRegister: function () {
-        return m.route.get().indexOf('registration') !== -1;
-    },
-    isChecked: function (value) {
-        // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
-        if (!this.isRegister()) {
-            console.log(userModel.current.receiveInfo);
-            if (userModel.current.receiveInfo !== undefined) {
-                return userModel.current.receiveInfo.indexOf(value) !== -1;
-            }
-        }
+    validateAll: function (model) {
+        Object.keys(model).forEach(function (field) {
+            return model[field].validate();
+        });
     },
     putOrRemove: function (checked, value) {
         if (checked) {
@@ -29,72 +22,66 @@ var _userFormCtrl = {
     isNicknameDuplicated: function (nickname) {
         var user = userModel.getFromStroage(nickname);
         return user !== null;
-    },
-    showOnlyServiceAgreement: function () {
-        document.getElementById('userForm').style.display = 'none';
-        document.getElementById('userDetail').style.display = 'none';
-        document.getElementById('serviceAgree').style.display = 'block';
-    },
-    showOnlyUserForm: function () {
-        document.getElementById('userForm').style.display = 'block';
-        document.getElementById('userDetail').style.display = 'block';
-        document.getElementById('serviceAgree').style.display = 'none';
+    }
+};
+var ValidatedInput = {
+    view: function (_a) {
+        var attrs = _a.attrs;
+        return (m("div", null,
+            m("input", { type: "text", value: attrs.field.value(), className: attrs.field.error ? 'error' : '', oninput: m.withAttr('value', attrs.field.value) }),
+            m("p", { class: 'isError' }, attrs.field.error)));
     }
 };
 //Main View
 export var userForm = {
-    // When isValid is true, submit btn is disabled.
-    isValid: false,
-    isNickname: false,
-    isEmail: false,
-    isPassword: false,
-    isPassword2: false,
-    isSex: false,
-    password2: '',
+    userModel: function () {
+        var model = {
+            longField: {
+                value: stream(''),
+                error: '',
+                validate: function () {
+                    model.longField.error =
+                        model.longField.value().length < 10 ?
+                            'Expected at least 10 characters' : '';
+                }
+            },
+            shortField: {
+                value: stream(''),
+                error: '',
+                validate: function () {
+                    model.shortField.error =
+                        model.shortField.value().length > 5 ?
+                            'Expected no more than 5 characters' : '';
+                }
+            }
+        };
+        return model;
+    },
+    Form: function () {
+        var model = userForm.userModel();
+        return {
+            view: function () {
+                return (m('form', {
+                    onsubmit: function (event) {
+                        event.preventDefault();
+                        _userFormCtrl.validateAll(model);
+                    }
+                }, m('p', 'At least 10 characters:'), m(ValidatedInput, { field: model.longField }), m('p', 'No more than 5 characters:'), m(ValidatedInput, { field: model.shortField }), m('hr'), m('button[type=submit]', 'Validate')));
+            }
+        };
+    },
     oninit: function (vnode) {
-        // When isValid is true, submit btn is disabled.
-        userForm.isValid = false;
-        userForm.isNickname = false;
-        userForm.isEmail = false;
-        userForm.isPassword = false;
-        userForm.isPassword2 = false;
-        userForm.isSex = false;
-        userForm.password2 = '';
         //receiveInfo를 []로 이용해주지 않으면 에러가 있음. interface 문제인지 널일시 function값이 들어가는 현상
         if (_userFormCtrl.isRegister()) {
-            userModel.current = {};
+            userModel.current = new Client;
             userModel.current.receiveInfo = [];
         }
         else {
             userModel.getByNickname(vnode.attrs.nickname);
         }
     },
-    //Join
-    oncreate: function () {
-        m.mount(document.getElementById('userDetail'), UserDetail);
-        if (_userFormCtrl.isRegister()) {
-            m.mount(document.getElementById('serviceAgree'), serviceAgreementComponent);
-            _userFormCtrl.showOnlyServiceAgreement();
-        }
-        else {
-            _userFormCtrl.showOnlyUserForm();
-        }
-    },
-    // Is Agree about our Service?
-    onupdate: function () {
-        // Changed window when all agreed
-        userForm.isValid = !(userForm.isNickname && userForm.isEmail && userForm.isPassword && userForm.isPassword2 && userForm.isSex);
-        document.getElementById('userFormSubmitBtn').disabled = userForm.isValid;
-        if (_userFormCtrl.isRegister()) {
-            if (serviceAgreementComponent.isAllAgree && serviceAgreementComponent.isSubmit) {
-                _userFormCtrl.showOnlyUserForm();
-            }
-            else {
-                _userFormCtrl.showOnlyServiceAgreement();
-            }
-        }
-    },
-    view: function () {
+    view: function (vnode) {
+        console.log('vnode1', vnode);
         return (m("div", null,
             m("div", { class: 'container' },
                 m("div", { id: 'serviceAgree' }),
@@ -213,9 +200,7 @@ export var userForm = {
                             m("button", { class: 'btn btn-primary', id: 'userFormSubmitBtn', type: 'button', onclick: function (e) {
                                     e.preventDefault();
                                     userModel.save();
-                                } }, "Save"))))),
-            m("hr", null),
-            m("div", { id: 'userDetail' })));
+                                } }, "Save")))))));
     }
 };
 //# sourceMappingURL=UserForm.js.map

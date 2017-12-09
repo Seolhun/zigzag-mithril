@@ -1,25 +1,15 @@
 import m from 'mithril'
 import localStyle from '../../../assets/scss/user/user.scss'
 import {Client, userModel} from '../../models/user/UserModel'
-import {serviceAgreementComponent} from '../../components/agree/ServiceAgreement'
 import {commonCtrl} from '../../../index'
+import stream from 'mithril/stream'
 
-import UserDetail from '../../view/user/UserDetail'
-
+//--------------------------------------------
 //Private Methods. Never export this object.
 const _userFormCtrl = {
-  isRegister(): boolean {
-    return m.route.get().indexOf('registration') !== -1
-  },
-
-  isChecked(value): boolean {
-    // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
-    if (!this.isRegister()) {
-      console.log(userModel.current.receiveInfo)
-      if (userModel.current.receiveInfo !== undefined) {
-        return userModel.current.receiveInfo.indexOf(value) !== -1
-      }
-    }
+  validateAll(model) {
+    Object.keys(model).forEach((field) =>
+      model[field].validate())
   },
 
   putOrRemove(checked: boolean, value): void {
@@ -33,78 +23,88 @@ const _userFormCtrl = {
   isNicknameDuplicated(nickname): boolean {
     let user = userModel.getFromStroage(nickname)
     return user !== null
-  },
+  }
+}
 
-  showOnlyServiceAgreement(): void {
-    document.getElementById('userForm').style.display = 'none'
-    document.getElementById('userDetail').style.display = 'none'
-    document.getElementById('serviceAgree').style.display = 'block'
-  },
-
-  showOnlyUserForm(): void {
-    document.getElementById('userForm').style.display = 'block'
-    document.getElementById('userDetail').style.display = 'block'
-    document.getElementById('serviceAgree').style.display = 'none'
+const ValidatedInput = {
+  view({attrs}) {
+    return (
+      <div>
+        <input
+          type="text"
+          value={attrs.field.value()}
+          className={attrs.field.error ? 'error' : ''}
+          oninput={
+            m.withAttr('value', attrs.field.value)
+          }
+        />
+        <p class={'isError'}>{attrs.field.error}</p>
+      </div>
+    )
   }
 }
 
 //Main View
 export const userForm = {
-  // When isValid is true, submit btn is disabled.
-  isValid: false,
-  isNickname: false,
-  isEmail: false,
-  isPassword: false,
-  isPassword2: false,
-  isSex: false,
-  password2: '',
+  userModel() {
+    const model = {
+      longField: {
+        value: stream(''),
+        error: '',
+        validate() {
+          model.longField.error =
+            model.longField.value().length < 10 ?
+              'Expected at least 10 characters' : ''
+        }
+      },
+      shortField: {
+        value: stream(''),
+        error: '',
+        validate() {
+          model.shortField.error =
+            model.shortField.value().length > 5 ?
+              'Expected no more than 5 characters' : ''
+        }
+      }
+    }
+    return model
+  },
+
+  Form() {
+    const model = userForm.userModel()
+    return {
+      view() {
+        return (
+          m('form', {
+              onsubmit(event) {
+                event.preventDefault()
+                _userFormCtrl.validateAll(model)
+              }
+            },
+            m('p', 'At least 10 characters:'),
+            m(ValidatedInput, {field: model.longField}),
+            m('p', 'No more than 5 characters:'),
+            m(ValidatedInput, {field: model.shortField}),
+            m('hr'),
+            m('button[type=submit]', 'Validate')
+          )
+        )
+      }
+    }
+  },
 
   oninit(vnode) {
-    // When isValid is true, submit btn is disabled.
-    userForm.isValid = false
-    userForm.isNickname = false
-    userForm.isEmail = false
-    userForm.isPassword = false
-    userForm.isPassword2 = false
-    userForm.isSex = false
-    userForm.password2 = ''
-
     //receiveInfo를 []로 이용해주지 않으면 에러가 있음. interface 문제인지 널일시 function값이 들어가는 현상
     if (_userFormCtrl.isRegister()) {
-      userModel.current = {} as Client
+      userModel.current = new Client
       userModel.current.receiveInfo = []
     } else {
       userModel.getByNickname(vnode.attrs.nickname)
     }
   },
 
-  //Join
-  oncreate() {
-    m.mount(document.getElementById('userDetail'), UserDetail)
-    if (_userFormCtrl.isRegister()) {
-      m.mount(document.getElementById('serviceAgree'), serviceAgreementComponent)
-      _userFormCtrl.showOnlyServiceAgreement()
-    } else {
-      _userFormCtrl.showOnlyUserForm()
-    }
-  },
-
-  // Is Agree about our Service?
-  onupdate() {
-    // Changed window when all agreed
-    userForm.isValid = !(userForm.isNickname && userForm.isEmail && userForm.isPassword && userForm.isPassword2 && userForm.isSex)
-    document.getElementById('userFormSubmitBtn').disabled = userForm.isValid
-
-    if (_userFormCtrl.isRegister()) {
-      if (serviceAgreementComponent.isAllAgree && serviceAgreementComponent.isSubmit) {
-        _userFormCtrl.showOnlyUserForm()
-      } else {
-        _userFormCtrl.showOnlyServiceAgreement()
-      }
-    }
-  },
-
-  view() {
+  view(vnode) {
+    console.log('vnode1', vnode)
     return (
       <div>
         <div class={'container'}>
@@ -376,11 +376,6 @@ export const userForm = {
               </div>
             </div>
           </form>
-        </div>
-        {/* Result Information */}
-        <hr/>
-        <div id={'userDetail'}>
-
         </div>
       </div>
     )
