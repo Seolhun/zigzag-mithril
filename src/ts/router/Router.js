@@ -1,7 +1,7 @@
 import m from 'mithril';
 import Root from '../view/Root';
 import UserList from '../view/user/UserList';
-import { userForm } from '../view/user/UserForm';
+import { UserForm } from '../view/user/UserForm';
 import UserDetail from '../view/user/UserDetail';
 /**
  * @Referenece : https://mithril.js.org/route.html;
@@ -13,7 +13,7 @@ m.route(document.getElementById('router-view'), '/', {
         },
     },
     // Join To us
-    '/registration': userForm,
+    '/registration': UserForm,
     // User Detail
     '/:nickname': {
         render: function (vnode) {

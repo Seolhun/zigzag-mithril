@@ -1,5 +1,6 @@
 import m from 'mithril'
 import {commonCtrl} from '../../../index'
+import stream from 'mithril/stream'
 
 interface User {
   nickname: string
