@@ -31,7 +31,7 @@ const _userDetailCtrl = {
         <p>Nickname: {userModel.current.nickname}</p>
         <p>Password: {userModel.current.password}</p>
         <p>Birth: {userModel.current.birth}</p>
-        <p>Sex: {userModel.current.sex}</p>
+        <p>Gender: {userModel.current.gender}</p>
         <p style="white-space: pre">
           Information: {userModel.current.description}
         </p>

@@ -16,7 +16,6 @@ var headerCtrl = {
             });
             if (userModel.list.length < 1) {
                 alert('매칭 된 검색 결과가 없습니다.');
-                return;
             }
         }
     }
@@ -45,9 +44,10 @@ var headerComponent = {
                     m("form", { class: "navbar-form navbar-right" },
                         m("div", { class: "form-group" },
                             m("input", { type: "text", class: "form-control", id: 'searchValue', placeholder: "Search" })),
-                        m("button", { type: "submit", class: "btn btn-default", onclick: m.withAttr('value', function () {
+                        m("button", { type: "submit", class: "btn btn-default", onclick: function (e) {
+                                e.preventDefault();
                                 headerCtrl.searchUser();
-                            }) }, "Submit"))))));
+                            } }, "Submit"))))));
     }
 };
 export { headerCtrl, headerComponent };
