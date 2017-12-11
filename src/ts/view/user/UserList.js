@@ -22,7 +22,7 @@ var _userListCtrl = {
             }))));
     }
 };
-export default {
+export var UserList = {
     oninit: function () {
         return (userModel.loadList());
     },

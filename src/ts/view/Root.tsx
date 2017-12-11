@@ -37,7 +37,7 @@ export default {
                     CSS class를 local scope로 정의 - 적용
                   </li>
                   <li>
-                    모델 데이터(속성)에 Mithril stream을 적용 - 미적용
+                    모델 데이터(속성)에 Mithril stream을 적용 - 적용
                   </li>
                 </ol>
               </ul>

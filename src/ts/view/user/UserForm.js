@@ -1,221 +1,197 @@
 import m from 'mithril';
+import stream from 'mithril/stream';
 import localStyle from '../../../assets/scss/user/user.scss';
-import { userModel } from '../../models/user/UserModel';
-import { serviceAgreementComponent } from '../../components/agree/ServiceAgreement';
-import { commonCtrl } from '../../../index';
-import UserDetail from '../../view/user/UserDetail';
-//Private Methods. Never export this object.
-var _userFormCtrl = {
-    isRegister: function () {
-        return m.route.get().indexOf('registration') !== -1;
-    },
-    isChecked: function (value) {
-        // userModel.current.receiveInfo != null && userModel.current.receiveInfo.indexOf('Email') !== -1
-        if (!this.isRegister()) {
-            console.log(userModel.current.receiveInfo);
-            if (userModel.current.receiveInfo !== undefined) {
-                return userModel.current.receiveInfo.indexOf(value) !== -1;
+import { Client, userModel } from '../../models/user/UserModel';
+import { commonCtrl } from '../../common/CommonCtrl';
+import { commonFormCtrl } from '../../common/commonFormCtrl';
+function userForm() {
+    var userFormModel = {
+        nicknameField: {
+            type: 'text',
+            value: stream(''),
+            placeholder: 'Nickname',
+            errorMsg: '',
+            validate: function () {
+                var bool = commonCtrl.isNickname(this.value());
+                this.errorMsg = bool ?
+                    UserForm.methods().isNicknameDuplicated(userFormModel.nicknameField.value()) ? '' : 'Already this nickname is registered.'
+                    : 'Enter a 4~20 characters and Use digits and alphabets';
+                return this.errorMsg.length === 0;
+            }
+        },
+        emailField: {
+            type: 'email',
+            value: stream(''),
+            placeholder: 'Email ',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Email' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        passwordField: {
+            type: 'password',
+            value: stream(''),
+            placeholder: 'Password',
+            errorMsg: '',
+            validate: function () {
+                if (this.value().length < 1) {
+                    this.errorMsg = 'Require a Password';
+                }
+                else {
+                    if (userFormModel.rePasswordField.value().length > 1) {
+                        var isSame = this.value() === userFormModel.rePasswordField.value();
+                        this.errorMsg = isSame ? '' : 'Enter a password, such as Re-Password.';
+                        userFormModel.rePasswordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Password.';
+                    }
+                }
+                return this.errorMsg.length === 0;
+            }
+        },
+        rePasswordField: {
+            type: 'password',
+            value: stream(''),
+            placeholder: 'Re-Password',
+            errorMsg: '',
+            validate: function () {
+                if (this.value().length < 1) {
+                    this.errorMsg = 'Require a Password';
+                }
+                else {
+                    if (userFormModel.passwordField.value().length > 1) {
+                        var isSame = this.value() === userFormModel.passwordField.value();
+                        this.errorMsg = isSame ? '' : 'Enter a password, such as Password.';
+                        userFormModel.passwordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Re-Password.';
+                    }
+                }
+                return this.errorMsg.length === 0;
+            }
+        },
+        birthField: {
+            type: 'date',
+            value: stream(''),
+            placeholder: 'Birth Day',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Birth date' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        genderField: {
+            type: 'radio',
+            name: 'gender',
+            value: stream(''),
+            placeholder: 'Gender',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Gender' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        descriptionField: {
+            type: 'text',
+            value: stream(''),
+            placeholder: 'Profile',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Profile' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        receiveInfoField: {
+            type: 'checkbox',
+            value: stream([]),
+            placeholder: 'Received Information',
+            errorMsg: '',
+            validate: function () {
+                return true;
             }
         }
+    };
+    return userFormModel;
+}
+export var UserForm = {
+    model: Function,
+    user: Client,
+    oninit: function () {
+        this.user = new Client();
+        this.model = userForm();
     },
-    putOrRemove: function (checked, value) {
-        if (checked) {
-            userModel.current.receiveInfo.push(value);
-        }
-        else {
-            commonCtrl.removeFromList(userModel.current.receiveInfo, value);
-        }
-    },
-    isNicknameDuplicated: function (nickname) {
-        var user = userModel.getFromStroage(nickname);
-        return user !== null;
-    },
-    showOnlyServiceAgreement: function () {
-        document.getElementById('userForm').style.display = 'none';
-        document.getElementById('userDetail').style.display = 'none';
-        document.getElementById('serviceAgree').style.display = 'block';
-    },
-    showOnlyUserForm: function () {
-        document.getElementById('userForm').style.display = 'block';
-        document.getElementById('userDetail').style.display = 'block';
-        document.getElementById('serviceAgree').style.display = 'none';
-    }
-};
-//Main View
-export var userForm = {
-    // When isValid is true, submit btn is disabled.
-    isValid: false,
-    isNickname: false,
-    isEmail: false,
-    isPassword: false,
-    isPassword2: false,
-    isSex: false,
-    password2: '',
-    oninit: function (vnode) {
-        // When isValid is true, submit btn is disabled.
-        userForm.isValid = false;
-        userForm.isNickname = false;
-        userForm.isEmail = false;
-        userForm.isPassword = false;
-        userForm.isPassword2 = false;
-        userForm.isSex = false;
-        userForm.password2 = '';
-        //receiveInfo를 []로 이용해주지 않으면 에러가 있음. interface 문제인지 널일시 function값이 들어가는 현상
-        if (_userFormCtrl.isRegister()) {
-            userModel.current = {};
-            userModel.current.receiveInfo = [];
-        }
-        else {
-            userModel.getByNickname(vnode.attrs.nickname);
-        }
-    },
-    //Join
-    oncreate: function () {
-        m.mount(document.getElementById('userDetail'), UserDetail);
-        if (_userFormCtrl.isRegister()) {
-            m.mount(document.getElementById('serviceAgree'), serviceAgreementComponent);
-            _userFormCtrl.showOnlyServiceAgreement();
-        }
-        else {
-            _userFormCtrl.showOnlyUserForm();
-        }
-    },
-    // Is Agree about our Service?
-    onupdate: function () {
-        // Changed window when all agreed
-        userForm.isValid = !(userForm.isNickname && userForm.isEmail && userForm.isPassword && userForm.isPassword2 && userForm.isSex);
-        document.getElementById('userFormSubmitBtn').disabled = userForm.isValid;
-        if (_userFormCtrl.isRegister()) {
-            if (serviceAgreementComponent.isAllAgree && serviceAgreementComponent.isSubmit) {
-                _userFormCtrl.showOnlyUserForm();
-            }
-            else {
-                _userFormCtrl.showOnlyServiceAgreement();
-            }
-        }
+    methods: function () {
+        var _this = this;
+        var isNicknameDuplicated = function (nickname) {
+            var user = userModel.getFromStroage(nickname);
+            return user === null;
+        };
+        var setModelDataIntoUser = function (userFormModel) {
+            _this.user.email = userFormModel.emailField.value();
+            _this.user.nickname = userFormModel.nicknameField.value();
+            _this.user.password = userFormModel.passwordField.value();
+            _this.user.birth = userFormModel.birthField.value();
+            _this.user.description = userFormModel.descriptionField.value();
+            _this.user.gender = userFormModel.genderField.value();
+            _this.user.receiveInfo = userFormModel.receiveInfoField.value();
+        };
+        return {
+            'isNicknameDuplicated': isNicknameDuplicated,
+            'setModelDataIntoUser': setModelDataIntoUser
+        };
     },
     view: function () {
+        var _this = this;
         return (m("div", null,
             m("div", { class: 'container' },
                 m("div", { id: 'serviceAgree' }),
                 m("form", { id: 'userForm', class: localStyle.userForm, onsubmit: function (e) {
                         e.preventDefault();
-                        userModel.save();
                     } },
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("div", { class: 'form-group' },
-                                m("label", { class: 'label' }, "Email"),
-                                m("input", { type: 'email', class: 'form-control', placeholder: 'Email', oninput: m.withAttr('value', function (value) {
-                                        userModel.current.email = value;
-                                        if (commonCtrl.isNull(value)) {
-                                            document.getElementById('emailError').innerText = '올바른 이메일 형식이 아닙니다.';
-                                            document.getElementById('emailError').style.display = 'block';
-                                            userForm.isEmail = false;
-                                            return;
-                                        }
-                                        document.getElementById('emailError').style.display = 'none';
-                                        userForm.isEmail = true;
-                                    }), value: userModel.current.email }),
-                                m("p", { id: 'emailError' })),
-                            m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Nickname"),
-                                m("input", { name: 'nickname', class: 'form-control', placeholder: 'Nickname', oninput: m.withAttr('value', function (value) {
-                                        userModel.current.nickname = value;
-                                        if (_userFormCtrl.isNicknameDuplicated(value)) {
-                                            document.getElementById('nicknameError').innerText = '중복된 닉네임입니다.';
-                                            document.getElementById('nicknameError').style.display = 'block';
-                                            userForm.isNickname = false;
-                                            return;
-                                        }
-                                        else if (!commonCtrl.isNickname(value)) {
-                                            document.getElementById('nicknameError').innerText = '닉네임은 영어,숫자와 4~20글자만 가능합니다.';
-                                            document.getElementById('nicknameError').style.display = 'block';
-                                            userForm.isNickname = false;
-                                            return;
-                                        }
-                                        document.getElementById('nicknameError').style.display = 'none';
-                                        userForm.isNickname = true;
-                                        console.log('userForm.isNickname', userForm.isNickname);
-                                    }), value: userModel.current.nickname }),
-                                m("p", { class: 'isError', id: 'nicknameError' })),
+                                commonFormCtrl.inputForm({ field: this.model.nicknameField })),
+                            m("div", { class: 'form-group' },
+                                m("label", { class: 'label' }, "Email"),
+                                commonFormCtrl.inputForm({ field: this.model.emailField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Password"),
-                                m("input", { type: 'password', class: 'form-control', placeholder: 'Password', oninput: m.withAttr('value', function (value) {
-                                        userModel.current.password = value;
-                                        if (userForm.password2.length > 0) {
-                                            if (userForm.password2 !== value) {
-                                                document.getElementById('rePasswordError').innerText = '비밀번호가 재입력 비밀번호와 같지 않습니다.';
-                                                document.getElementById('rePasswordError').style.display = 'block';
-                                                userForm.isPassword = false;
-                                                return;
-                                            }
-                                        }
-                                        document.getElementById('rePasswordError').style.display = 'none';
-                                        userForm.isPassword = true;
-                                    }), value: userModel.current.password })),
+                                commonFormCtrl.inputForm({ field: this.model.passwordField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Re-Password"),
-                                m("input", { type: 'password', class: 'form-control', placeholder: 'Re-Password', oninput: m.withAttr('value', function (value) {
-                                        userForm.password2 = value;
-                                        if (userModel.current.password !== value) {
-                                            document.getElementById('rePasswordError').innerText = '재입력 비밀번호가 올바르지 않습니다.';
-                                            document.getElementById('rePasswordError').style.display = 'block';
-                                            userForm.isPassword2 = false;
-                                            return;
-                                        }
-                                        document.getElementById('rePasswordError').style.display = 'none';
-                                        userForm.isPassword2 = true;
-                                    }) }),
-                                m("p", { class: 'isError', id: 'rePasswordError' })),
+                                commonFormCtrl.inputForm({ field: this.model.rePasswordField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Birth"),
-                                m("input", { type: 'date', class: 'form-control', placeholder: 'Birth', oninput: m.withAttr('value', function (value) {
-                                        userModel.current.birth = value;
-                                    }), value: userModel.current.birth })),
+                                commonFormCtrl.inputForm({ field: this.model.birthField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Information"),
-                                m("textarea", { class: 'form-control', placeholder: 'Description about you', oninput: m.withAttr('value', function (value) {
-                                        userModel.current.description = value;
-                                    }), value: userModel.current.description })))),
+                                commonFormCtrl.textAreaForm({ field: this.model.descriptionField })))),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
+                            m("label", { class: 'label' }, "Gender"),
                             m("div", { class: "form-group" },
-                                m("label", { for: "genderMale", class: 'label' },
-                                    m("input", { type: "radio", name: 'gender', id: "genderMale", value: 'Male', onchange: m.withAttr('value', function (value) {
-                                            userModel.current.sex = value;
-                                            userForm.isSex = true;
-                                        }), checked: userModel.current.sex === 'Male' }),
-                                    "Male"),
-                                m("label", { for: "genderFemail", class: 'label' },
-                                    m("input", { type: "radio", name: 'gender', id: "genderFemail", value: 'Female', onchange: m.withAttr('value', function (value) {
-                                            userModel.current.sex = value;
-                                            userForm.isSex = true;
-                                        }), checked: userModel.current.sex === 'Female' }),
-                                    "Female")))),
+                                commonFormCtrl.radioForm({ field: this.model.genderField }, 'Male'),
+                                commonFormCtrl.radioForm({ field: this.model.genderField }, 'Female')))),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("label", { class: 'label' }, "ZIGZAG \uC815\uBCF4\uB97C \uBC1B\uC544\uBCF4\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"),
                             m("div", { class: "form-group" },
-                                m("label", { for: 'phoneCheckbox', class: 'label' },
-                                    m("input", { type: "checkbox", value: "Phone", id: 'phoneCheckbox', onchange: m.withAttr('checked', function (checked) {
-                                            _userFormCtrl.putOrRemove(checked, 'Phone');
-                                        }), checked: _userFormCtrl.isChecked('Phone') }),
-                                    "Phone"),
-                                m("label", { for: 'emailCheckbox', class: 'label' },
-                                    m("input", { type: "checkbox", id: 'emailCheckbox', value: "Email", onchange: m.withAttr('checked', function (checked) {
-                                            _userFormCtrl.putOrRemove(checked, 'Email');
-                                        }), checked: _userFormCtrl.isChecked('Email') }),
-                                    "Email")))),
+                                commonFormCtrl.checkboxForm({ field: this.model.receiveInfoField }, 'Phone'),
+                                commonFormCtrl.checkboxForm({ field: this.model.receiveInfoField }, 'Email')))),
                     m("hr", null),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("button", { class: 'btn btn-primary', id: 'userFormSubmitBtn', type: 'button', onclick: function (e) {
                                     e.preventDefault();
-                                    userModel.save();
-                                } }, "Save"))))),
-            m("hr", null),
-            m("div", { id: 'userDetail' })));
+                                    var bool = commonFormCtrl.validateAll(_this.model);
+                                    if (bool) {
+                                        _this.methods().setModelDataIntoUser(_this.model);
+                                        userModel.save(_this.user);
+                                    }
+                                } }, "Save")))))));
     }
 };
 //# sourceMappingURL=UserForm.js.map

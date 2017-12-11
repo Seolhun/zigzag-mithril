@@ -17,7 +17,6 @@ const headerCtrl = {
 
       if (userModel.list.length < 1) {
         alert('매칭 된 검색 결과가 없습니다.')
-        return
       }
     }
   }
@@ -30,9 +29,13 @@ const headerComponent = {
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-                    aria-expanded="false">
+            <button
+              type="button"
+              class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1"
+              aria-expanded="false"
+            >
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -79,11 +82,10 @@ const headerComponent = {
               <button
                 type="submit"
                 class="btn btn-default"
-                onclick={
-                  m.withAttr('value', () => {
-                    headerCtrl.searchUser()
-                  })
-                }
+                onclick={(e: Event) => {
+                  e.preventDefault()
+                  headerCtrl.searchUser()
+                }}
               >
                 Submit
               </button>
@@ -93,7 +95,6 @@ const headerComponent = {
       </nav>
     )
   }
-} as m.Component<{}, {}>
-
+}
 
 export {headerCtrl, headerComponent}

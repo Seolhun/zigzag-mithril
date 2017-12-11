@@ -1,18 +1,22 @@
 import m from 'mithril';
-import { commonCtrl } from '../../../index';
+import { commonCtrl } from '../../common/CommonCtrl';
 var Client = /** @class */ (function () {
     function Client() {
+        this.id = null;
         this.nickname = null;
         this.email = null;
         this.password = null;
         this.birth = null;
         this.description = null;
-        this.sex = null;
+        this.gender = null;
         this.styles = [];
         this.receiveInfo = [];
         this.privateAgree = false;
         this.serviceAgree = false;
+        this.createdBy = null;
         this.createdDate = null;
+        this.modifiedBy = null;
+        this.modifiedDate = null;
     }
     return Client;
 }());
@@ -20,92 +24,45 @@ var userModel = {
     list: [],
     storedUserList: [],
     current: new Client(),
-    isValid: function () {
-        // Interface?
-        console.log(userModel.current.email);
-        if (userModel.current.email === null) {
-            alert('이메일을 입력해주세요.');
-            return true;
-        }
-        else if (!commonCtrl.isNickname(userModel.current.nickname)) {
-            alert('닉네임 값이 올바르지 않습니다.');
-            return true;
-        }
-        else if (userModel.current.password === null) {
-            alert('비밀번호를 입력해주세요.');
-            return true;
-        }
-        else if (userModel.current.sex === null) {
-            alert('성별을 골라주세요');
-            return true;
-        }
-        return false;
-    },
     loadList: function () {
         userModel.storedUserList = userModel.getFromStroage('userList');
         if (userModel.storedUserList === null) {
             userModel.storedUserList = [];
         }
-        //----------API Call Examples----------
-        // return m.request<{ data: User[] }>({
-        //   method: 'GET',
-        //   url: 'https://rem-rest-api.herokuapp.com/api/users',
-        //   withCredentials: true
-        // }).then(result => {
-        //   userModel.list = result.data
-        // })
     },
     // Current User
     getByNickname: function (nickname) {
-        userModel.current = userModel.getFromStroage(nickname);
-        if (userModel.current === null) {
-            userModel.current = new Client();
+        var user = {};
+        user = userModel.getFromStroage(nickname);
+        if (user === null) {
+            return user;
         }
-        //----------API Call Examples----------
-        // return m.request<User>({
-        //   method: 'GET',
-        //   url: 'https://rem-rest-api.herokuapp.com/api/users/' + nickname,
-        //   withCredentials: true
-        // }).then(result => {
-        //   userModel.current = result
-        // })
+        return user;
     },
-    save: function () {
-        //UserForm Validation
-        if (this.isValid()) {
-            return;
-        }
-        userModel.storedUserList.push(userModel.current);
-        userModel.setIntoStorageOne();
-        userModel.setIntoStorageList(userModel.storedUserList);
-        alert(userModel.current.nickname + '님 ZIGZAG에 오신것을 환영합니다.');
-        m.route.set('/' + userModel.current.nickname);
-        userModel.current = new Client();
-        //----------API Call Examples----------
-        // return m.request({
-        //   method: 'PUT',
-        //   url: 'https://rem-rest-api.herokuapp.com/api/users/' + userModel.current.id,
-        //   data: userModel.current,
-        //   withCredentials: true
-        // })
+    save: function (user) {
+        userModel.storedUserList.push(user);
+        userModel.saveIntoStorageOne(user);
+        userModel.saveIntoStorageList(userModel.storedUserList);
+        alert('Hello, ' + user.nickname + ' Welcome to ZIGZAG!!! :)');
+        m.route.set('/' + user.nickname);
     },
     removeFromStroage: function (key) {
         commonCtrl.removeFromList(userModel.storedUserList, key);
-        if (confirm('삭제하시겠습니까?')) {
-            userModel.setIntoStorageList(userModel.storedUserList);
+        if (confirm('Do yo wanna ' + key + ' user delete?')) {
+            userModel.saveIntoStorageList(userModel.storedUserList);
             localStorage.removeItem(key);
-            alert(key + '님이 정상적으로 삭제되었습니다.');
+            alert(key + ' user is deleted.');
             m.route.set('/list');
         }
     },
     getFromStroage: function (key) {
         return JSON.parse(localStorage.getItem(key));
     },
-    setIntoStorageList: function (userList) {
+    saveIntoStorageList: function (userList) {
         localStorage.setItem('userList', JSON.stringify(userList));
     },
-    setIntoStorageOne: function () {
-        localStorage.setItem(userModel.current.nickname, JSON.stringify(userModel.current));
+    saveIntoStorageOne: function (one) {
+        localStorage.setItem(one.nickname, JSON.stringify(one));
     }
 };
 export { Client, userModel };
