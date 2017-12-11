@@ -95,7 +95,6 @@ const headerComponent = {
       </nav>
     )
   }
-} as m.Component<{}, {}>
-
+}
 
 export {headerCtrl, headerComponent}

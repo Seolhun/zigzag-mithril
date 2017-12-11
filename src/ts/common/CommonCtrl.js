@@ -21,8 +21,16 @@ export var commonCtrl = {
                 alert('올바른 패턴타입을 골라주세요');
         }
     },
-    removeFromList: function (list, removedValue) {
-        list.splice(list.indexOf(removedValue), 1);
+    pushIntoListNotDuplication: function (list, value) {
+        if (list.indexOf(value) === -1) {
+            list.push(value);
+        }
+        else {
+            commonCtrl.removeFromList(list, value);
+        }
+    },
+    removeFromList: function (list, value) {
+        list.splice(list.indexOf(value), 1);
     },
     //True is Null
     isNull: function (value) {

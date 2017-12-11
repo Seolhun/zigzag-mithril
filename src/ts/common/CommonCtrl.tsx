@@ -23,8 +23,16 @@ export const commonCtrl = {
     }
   },
 
-  removeFromList(list, removedValue): void {
-    list.splice(list.indexOf(removedValue), 1)
+  pushIntoListNotDuplication(list: Object[], value: string): void {
+    if (list.indexOf(value) === -1) {
+      list.push(value)
+    } else {
+      commonCtrl.removeFromList(list, value)
+    }
+  },
+
+  removeFromList(list: Object[], value: string): void {
+    list.splice(list.indexOf(value), 1)
   },
 
   //True is Null

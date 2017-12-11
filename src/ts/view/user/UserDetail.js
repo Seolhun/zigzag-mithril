@@ -1,58 +1,11 @@
 import m from 'mithril';
-import { userModel } from '../../models/user/UserModel';
-//Private Methods. Never export this object.
-var _userDetailCtrl = {
-    isDetail: function () {
-        return !(m.route.get().indexOf('registration') !== -1);
-    },
-    showDeleteBtn: function () {
-        if (this.isDetail()) {
-            return (m("div", null,
-                m("button", { class: 'btn btn-danger', onclick: m.withAttr('value', function () {
-                        userModel.removeFromStroage(userModel.current.nickname);
-                    }) }, "Delete")));
-        }
-    },
-    showDetailData: function () {
-        return (m("div", { class: "panel-body" },
-            m("p", null,
-                "E-Mail: ",
-                userModel.current.email),
-            m("p", null,
-                "Nickname: ",
-                userModel.current.nickname),
-            m("p", null,
-                "Password: ",
-                userModel.current.password),
-            m("p", null,
-                "Birth: ",
-                userModel.current.birth),
-            m("p", null,
-                "Gender: ",
-                userModel.current.gender),
-            m("p", { style: "white-space: pre" },
-                "Information: ",
-                userModel.current.description),
-            m("p", null, "How to received Information"),
-            m("ul", null, userModel.current.receiveInfo.length < 1 ?
-                m("li", null, "Nothing want.") : userModel.current.receiveInfo.map(function (value) {
-                return (m("li", null, value));
-            })),
-            m("p", null,
-                "Service Agreement: ",
-                userModel.current.serviceAgree,
-                " "),
-            m("p", null,
-                "Private Agreement: ",
-                userModel.current.privateAgree,
-                " "),
-            _userDetailCtrl.showDeleteBtn()));
-    },
-};
-export default {
+import { Client, userModel } from '../../models/user/UserModel';
+export var UserDetail = {
+    user: Client,
     oninit: function (vnode) {
+        this.user = {};
         if (_userDetailCtrl.isDetail()) {
-            userModel.getByNickname(vnode.attrs.nickname);
+            this.user = userModel.getByNickname(vnode.attrs.nickname);
         }
     },
     view: function () {
@@ -62,7 +15,56 @@ export default {
                     m("div", { class: "panel panel-default" },
                         m("div", { class: "panel-heading" },
                             m("h4", null, "Your Data")),
-                        _userDetailCtrl.showDetailData())))));
+                        _userDetailCtrl.showDetailData(this.user))))));
+    }
+};
+//Private Methods. Never export this object.
+var _userDetailCtrl = {
+    isDetail: function () {
+        return !(m.route.get().indexOf('registration') !== -1);
+    },
+    showDeleteBtn: function (user) {
+        if (this.isDetail()) {
+            return (m("div", null,
+                m("button", { class: 'btn btn-danger', onclick: m.withAttr('value', function () {
+                        userModel.removeFromStroage(user.nickname);
+                    }) }, "Delete")));
+        }
+    },
+    showDetailData: function (user) {
+        return (m("div", { class: "panel-body" },
+            m("p", null,
+                "E-Mail: ",
+                user.email),
+            m("p", null,
+                "Nickname: ",
+                user.nickname),
+            m("p", null,
+                "Password: ",
+                user.password),
+            m("p", null,
+                "Birth: ",
+                user.birth),
+            m("p", null,
+                "Gender: ",
+                user.gender),
+            m("p", { style: "white-space: pre" },
+                "Information: ",
+                user.description),
+            m("p", null, "How to received Information"),
+            m("ul", null, user.receiveInfo.length < 1 ?
+                m("li", null, "Nothing want.") : user.receiveInfo.map(function (value) {
+                return (m("li", null, value));
+            })),
+            m("p", null,
+                "Service Agreement: ",
+                user.serviceAgree,
+                " "),
+            m("p", null,
+                "Private Agreement: ",
+                user.privateAgree,
+                " "),
+            _userDetailCtrl.showDeleteBtn(user)));
     }
 };
 //# sourceMappingURL=UserDetail.js.map

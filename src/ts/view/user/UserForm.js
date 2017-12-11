@@ -1,125 +1,144 @@
 import m from 'mithril';
+import stream from 'mithril/stream';
 import localStyle from '../../../assets/scss/user/user.scss';
 import { Client, userModel } from '../../models/user/UserModel';
-import stream from 'mithril/stream';
 import { commonCtrl } from '../../common/CommonCtrl';
 import { commonFormCtrl } from '../../common/commonFormCtrl';
-var userFormModel = {
-    emailField: {
-        type: 'email',
-        value: stream(''),
-        placeholder: 'Email ',
-        errorMsg: '',
-        validate: function () {
-            var bool = commonCtrl.isNull(this.emailField.value());
-            this.emailField.errorMsg = bool ? '' : 'Require a Email';
-            return bool;
-        }
-    },
-    nicknameField: {
-        type: 'text',
-        value: stream(''),
-        placeholder: 'Nickname',
-        errorMsg: '',
-        validate: function () {
-            var bool = commonCtrl.isNickname(this.nicknameField.value());
-            this.nicknameField.errorMsg = bool ? '' : 'Enter a only digits and alphabets';
-            return this.errorMsg.length === 0;
-        }
-    },
-    passwordField: {
-        type: 'password',
-        value: stream(''),
-        placeholder: 'Password',
-        errorMsg: '',
-        validate: function () {
-            if (commonCtrl.isNull(this.passwordField.value())) {
-                this.nicknameField.errorMsg = 'Require a Password';
+function userForm() {
+    var userFormModel = {
+        nicknameField: {
+            type: 'text',
+            value: stream(''),
+            placeholder: 'Nickname',
+            errorMsg: '',
+            validate: function () {
+                var bool = commonCtrl.isNickname(this.value());
+                this.errorMsg = bool ?
+                    UserForm.methods().isNicknameDuplicated(userFormModel.nicknameField.value()) ? '' : 'Already this nickname is registered.'
+                    : 'Enter a 4~20 characters and Use digits and alphabets';
+                return this.errorMsg.length === 0;
             }
-            else {
-                if (this.rePasswordField.value() !== '') {
-                    this.passwordField.errorMsg = this.passwordField.value() === this.rePasswordField.value() ? '' : 'Enter a password, such as Re-Password.';
+        },
+        emailField: {
+            type: 'email',
+            value: stream(''),
+            placeholder: 'Email ',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Email' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        passwordField: {
+            type: 'password',
+            value: stream(''),
+            placeholder: 'Password',
+            errorMsg: '',
+            validate: function () {
+                if (this.value().length < 1) {
+                    this.errorMsg = 'Require a Password';
                 }
-            }
-            return this.errorMsg.length === 0;
-        }
-    },
-    rePasswordField: {
-        type: 'password',
-        value: stream(''),
-        placeholder: 'Re-Password',
-        errorMsg: '',
-        validate: function () {
-            if (commonCtrl.isNull(this.rePasswordField.value())) {
-                this.nicknameField.errorMsg = 'Require a Password';
-            }
-            else {
-                if (this.passwordField.value() !== '') {
-                    this.rePasswordField.errorMsg = this.rePasswordField.value() === this.passwordField.value() ? '' : 'Enter a Re-password, such as Password.';
+                else {
+                    if (userFormModel.rePasswordField.value().length > 1) {
+                        var isSame = this.value() === userFormModel.rePasswordField.value();
+                        this.errorMsg = isSame ? '' : 'Enter a password, such as Re-Password.';
+                        userFormModel.rePasswordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Password.';
+                    }
                 }
+                return this.errorMsg.length === 0;
             }
-            return this.errorMsg.length === 0;
+        },
+        rePasswordField: {
+            type: 'password',
+            value: stream(''),
+            placeholder: 'Re-Password',
+            errorMsg: '',
+            validate: function () {
+                if (this.value().length < 1) {
+                    this.errorMsg = 'Require a Password';
+                }
+                else {
+                    if (userFormModel.passwordField.value().length > 1) {
+                        var isSame = this.value() === userFormModel.passwordField.value();
+                        this.errorMsg = isSame ? '' : 'Enter a password, such as Password.';
+                        userFormModel.passwordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Re-Password.';
+                    }
+                }
+                return this.errorMsg.length === 0;
+            }
+        },
+        birthField: {
+            type: 'date',
+            value: stream(''),
+            placeholder: 'Birth Day',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Birth date' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        genderField: {
+            type: 'radio',
+            name: 'gender',
+            value: stream(''),
+            placeholder: 'Gender',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Gender' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        descriptionField: {
+            type: 'text',
+            value: stream(''),
+            placeholder: 'Profile',
+            errorMsg: '',
+            validate: function () {
+                var bool = this.value().length < 1;
+                this.errorMsg = bool ? 'Require a Profile' : '';
+                return this.errorMsg.length === 0;
+            }
+        },
+        receiveInfoField: {
+            type: 'checkbox',
+            value: stream([]),
+            placeholder: 'Received Information',
+            errorMsg: '',
+            validate: function () {
+                return true;
+            }
         }
-    },
-    birthField: {
-        value: stream(''),
-        placeholder: 'Birth Day',
-        errorMsg: '',
-        validate: function () {
-            this.birthField.errorMsg = this.birthField.value().length > 5 ? 'Expected no more than 5 characters' : '';
-            return this.errorMsg.length === 0;
-        }
-    },
-    genderField: {
-        type: 'radio',
-        name: 'gender',
-        value: stream(''),
-        placeholder: 'Gender',
-        errorMsg: '',
-        validate: function () {
-            var bool = commonCtrl.isNull(this.genderField.value());
-            this.genderField.errorMsg = bool ? '' : 'Require a Email';
-            return bool;
-        }
-    },
-    profileField: {
-        type: 'text',
-        value: stream(''),
-        placeholder: 'Profile',
-        errorMsg: '',
-        validate: function () {
-            var bool = commonCtrl.isNull(this.genderField.value());
-            this.genderField.errorMsg = bool ? '' : 'Require a Email';
-            return bool;
-        }
-    },
-    receiveInfoField: {
-        type: 'checkbox',
-        value: stream([]),
-        placeholder: 'Received Information',
-        errorMsg: '',
-        validate: function () {
-            var bool = commonCtrl.isNull(this.genderField.value());
-            this.genderField.errorMsg = bool ? '' : 'Require a Email';
-            return bool;
-        }
-    }
-};
-//--------------------------------------------
+    };
+    return userFormModel;
+}
 export var UserForm = {
-    data: function () {
-        var user = new Client;
-        return {
-            'user': user
-        };
+    model: Function,
+    user: Client,
+    oninit: function () {
+        this.user = new Client();
+        this.model = userForm();
     },
     methods: function () {
+        var _this = this;
         var isNicknameDuplicated = function (nickname) {
             var user = userModel.getFromStroage(nickname);
-            return user !== null;
+            return user === null;
+        };
+        var setModelDataIntoUser = function (userFormModel) {
+            _this.user.email = userFormModel.emailField.value();
+            _this.user.nickname = userFormModel.nicknameField.value();
+            _this.user.password = userFormModel.passwordField.value();
+            _this.user.birth = userFormModel.birthField.value();
+            _this.user.description = userFormModel.descriptionField.value();
+            _this.user.gender = userFormModel.genderField.value();
+            _this.user.receiveInfo = userFormModel.receiveInfoField.value();
         };
         return {
-            'isNicknameDuplicated': isNicknameDuplicated
+            'isNicknameDuplicated': isNicknameDuplicated,
+            'setModelDataIntoUser': setModelDataIntoUser
         };
     },
     view: function () {
@@ -133,42 +152,44 @@ export var UserForm = {
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("div", { class: 'form-group' },
-                                m("label", { class: 'label' }, "Email"),
-                                commonFormCtrl.inputForm({ field: userFormModel.emailField })),
-                            m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Nickname"),
-                                commonFormCtrl.inputForm({ field: userFormModel.nicknameField })),
+                                commonFormCtrl.inputForm({ field: this.model.nicknameField })),
+                            m("div", { class: 'form-group' },
+                                m("label", { class: 'label' }, "Email"),
+                                commonFormCtrl.inputForm({ field: this.model.emailField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Password"),
-                                commonFormCtrl.inputForm({ field: userFormModel.passwordField })),
+                                commonFormCtrl.inputForm({ field: this.model.passwordField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Re-Password"),
-                                commonFormCtrl.inputForm({ field: userFormModel.rePasswordField })),
+                                commonFormCtrl.inputForm({ field: this.model.rePasswordField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Birth"),
-                                commonFormCtrl.inputForm({ field: userFormModel.birthField })),
+                                commonFormCtrl.inputForm({ field: this.model.birthField })),
                             m("div", { class: 'form-group' },
                                 m("label", { class: 'label' }, "Information"),
-                                commonFormCtrl.textAreaForm({ field: userFormModel.profileField })))),
+                                commonFormCtrl.textAreaForm({ field: this.model.descriptionField })))),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("label", { class: 'label' }, "Gender"),
                             m("div", { class: "form-group" },
-                                commonFormCtrl.checkboxForm({ field: userFormModel.genderField }, 'Male'),
-                                commonFormCtrl.checkboxForm({ field: userFormModel.genderField }, 'Female')))),
+                                commonFormCtrl.radioForm({ field: this.model.genderField }, 'Male'),
+                                commonFormCtrl.radioForm({ field: this.model.genderField }, 'Female')))),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("label", { class: 'label' }, "ZIGZAG \uC815\uBCF4\uB97C \uBC1B\uC544\uBCF4\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"),
                             m("div", { class: "form-group" },
-                                commonFormCtrl.checkboxForm({ field: userFormModel.receiveInfoField }, 'Phone'),
-                                commonFormCtrl.checkboxForm({ field: userFormModel.receiveInfoField }, 'Email')))),
+                                commonFormCtrl.checkboxForm({ field: this.model.receiveInfoField }, 'Phone'),
+                                commonFormCtrl.checkboxForm({ field: this.model.receiveInfoField }, 'Email')))),
                     m("hr", null),
                     m("div", { class: 'row' },
                         m("div", { class: 'col-sm-8 col-sm-offset-2' },
                             m("button", { class: 'btn btn-primary', id: 'userFormSubmitBtn', type: 'button', onclick: function (e) {
                                     e.preventDefault();
-                                    if (commonFormCtrl.validateAll(userFormModel)) {
-                                        userModel.save(_this.data().user);
+                                    var bool = commonFormCtrl.validateAll(_this.model);
+                                    if (bool) {
+                                        _this.methods().setModelDataIntoUser(_this.model);
+                                        userModel.save(_this.user);
                                     }
                                 } }, "Save")))))));
     }

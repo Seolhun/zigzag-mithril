@@ -52,7 +52,7 @@ const _userListCtrl = {
   }
 }
 
-export default {
+export const UserList = {
   oninit() {
     return (
       userModel.loadList()
@@ -81,4 +81,4 @@ export default {
       </div>
     )
   }
-} as m.Component<Client, {}>
+}

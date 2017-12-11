@@ -1,66 +1,13 @@
 import m from 'mithril'
 import {Client, userModel} from '../../models/user/UserModel'
 
-//Private Methods. Never export this object.
-const _userDetailCtrl = {
-  isDetail() {
-    return !(m.route.get().indexOf('registration') !== -1)
-  },
+export const UserDetail = {
+  user: Client,
 
-  showDeleteBtn() {
-    if (this.isDetail()) {
-      return (
-        <div>
-          <button
-            class={'btn btn-danger'}
-            onclick={m.withAttr('value', () => {
-              userModel.removeFromStroage(userModel.current.nickname)
-            })}
-          >
-            Delete
-          </button>
-        </div>
-      )
-    }
-  },
-
-  showDetailData() {
-    return (
-      <div class="panel-body">
-        <p>E-Mail: {userModel.current.email}</p>
-        <p>Nickname: {userModel.current.nickname}</p>
-        <p>Password: {userModel.current.password}</p>
-        <p>Birth: {userModel.current.birth}</p>
-        <p>Gender: {userModel.current.gender}</p>
-        <p style="white-space: pre">
-          Information: {userModel.current.description}
-        </p>
-        <p>How to received Information</p>
-        <ul>
-          {userModel.current.receiveInfo.length < 1 ?
-            <li>Nothing want.</li> : userModel.current.receiveInfo.map(function (value) {
-              return (
-                <li>
-                  {value}
-                </li>
-              )
-            })
-          }
-        </ul>
-        <p>Service Agreement: {userModel.current.serviceAgree} </p>
-        <p>Private Agreement: {userModel.current.privateAgree} </p>
-        {
-          _userDetailCtrl.showDeleteBtn()
-        }
-      </div>
-    )
-  },
-}
-
-export default {
   oninit(vnode) {
+    this.user = {} as Client
     if (_userDetailCtrl.isDetail()) {
-      userModel.getByNickname(vnode.attrs.nickname)
+      this.user = userModel.getByNickname(vnode.attrs.nickname)
     }
   },
 
@@ -74,7 +21,7 @@ export default {
                 <h4>Your Data</h4>
               </div>
               {
-                _userDetailCtrl.showDetailData()
+                _userDetailCtrl.showDetailData(this.user)
               }
             </div>
           </div>
@@ -82,5 +29,62 @@ export default {
       </div>
     )
   }
-} as m.Component<Client, {}>
+}
+
+//Private Methods. Never export this object.
+const _userDetailCtrl = {
+  isDetail() {
+    return !(m.route.get().indexOf('registration') !== -1)
+  },
+
+  showDeleteBtn(user) {
+    if (this.isDetail()) {
+      return (
+        <div>
+          <button
+            class={'btn btn-danger'}
+            onclick={m.withAttr('value', () => {
+              userModel.removeFromStroage(user.nickname)
+            })}
+          >
+            Delete
+          </button>
+        </div>
+      )
+    }
+  },
+
+  showDetailData(user) {
+    return (
+      <div class="panel-body">
+        <p>E-Mail: {user.email}</p>
+        <p>Nickname: {user.nickname}</p>
+        <p>Password: {user.password}</p>
+        <p>Birth: {user.birth}</p>
+        <p>Gender: {user.gender}</p>
+        <p style="white-space: pre">
+          Information: {user.description}
+        </p>
+        <p>How to received Information</p>
+        <ul>
+          {user.receiveInfo.length < 1 ?
+            <li>Nothing want.</li> : user.receiveInfo.map(function (value) {
+              return (
+                <li>
+                  {value}
+                </li>
+              )
+            })
+          }
+        </ul>
+        <p>Service Agreement: {user.serviceAgree} </p>
+        <p>Private Agreement: {user.privateAgree} </p>
+        {
+          _userDetailCtrl.showDeleteBtn(user)
+        }
+      </div>
+    )
+  }
+}
+
 

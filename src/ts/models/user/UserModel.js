@@ -9,8 +9,8 @@ var Client = /** @class */ (function () {
         this.birth = null;
         this.description = null;
         this.gender = null;
-        this.receiveInfo = [];
         this.styles = [];
+        this.receiveInfo = [];
         this.privateAgree = false;
         this.serviceAgree = false;
         this.createdBy = null;
@@ -32,35 +32,37 @@ var userModel = {
     },
     // Current User
     getByNickname: function (nickname) {
-        userModel.current = userModel.getFromStroage(nickname);
-        if (userModel.current === null) {
-            userModel.current = new Client();
+        var user = {};
+        user = userModel.getFromStroage(nickname);
+        if (user === null) {
+            return user;
         }
+        return user;
     },
     save: function (user) {
         userModel.storedUserList.push(user);
-        userModel.setIntoStorageOne();
-        userModel.setIntoStorageList(userModel.storedUserList);
-        alert(user.nickname + '님 ZIGZAG에 오신것을 환영합니다.');
+        userModel.saveIntoStorageOne(user);
+        userModel.saveIntoStorageList(userModel.storedUserList);
+        alert('Hello, ' + user.nickname + ' Welcome to ZIGZAG!!! :)');
         m.route.set('/' + user.nickname);
     },
     removeFromStroage: function (key) {
         commonCtrl.removeFromList(userModel.storedUserList, key);
-        if (confirm('삭제하시겠습니까?')) {
-            userModel.setIntoStorageList(userModel.storedUserList);
+        if (confirm('Do yo wanna ' + key + ' user delete?')) {
+            userModel.saveIntoStorageList(userModel.storedUserList);
             localStorage.removeItem(key);
-            alert(key + '님이 정상적으로 삭제되었습니다.');
+            alert(key + ' user is deleted.');
             m.route.set('/list');
         }
     },
     getFromStroage: function (key) {
         return JSON.parse(localStorage.getItem(key));
     },
-    setIntoStorageList: function (userList) {
+    saveIntoStorageList: function (userList) {
         localStorage.setItem('userList', JSON.stringify(userList));
     },
-    setIntoStorageOne: function () {
-        localStorage.setItem(userModel.current.nickname, JSON.stringify(userModel.current));
+    saveIntoStorageOne: function (one) {
+        localStorage.setItem(one.nickname, JSON.stringify(one));
     }
 };
 export { Client, userModel };

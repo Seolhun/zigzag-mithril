@@ -1,131 +1,149 @@
 import m from 'mithril'
+import stream from 'mithril/stream'
 import localStyle from '../../../assets/scss/user/user.scss'
 import {Client, userModel} from '../../models/user/UserModel'
-import stream from 'mithril/stream'
 import {commonCtrl} from '../../common/CommonCtrl'
 import {commonFormCtrl} from '../../common/commonFormCtrl'
 
-
-const userFormModel = {
-  emailField: {
-    type: 'email',
-    value: stream(''),
-    placeholder: 'Email ',
-    errorMsg: '',
-    validate(): boolean {
-      let bool = commonCtrl.isNull(this.emailField.value())
-      this.emailField.errorMsg = bool ? '' : 'Require a Email'
-      return bool
-    }
-  },
-  nicknameField: {
-    type: 'text',
-    value: stream(''),
-    placeholder: 'Nickname',
-    errorMsg: '',
-    validate(): boolean {
-      let bool = commonCtrl.isNickname(this.nicknameField.value())
-      this.nicknameField.errorMsg = bool ? '' : 'Enter a only digits and alphabets'
-      return this.errorMsg.length === 0
-    }
-  },
-  passwordField: {
-    type: 'password',
-    value: stream(''),
-    placeholder: 'Password',
-    errorMsg: '',
-    validate(): boolean {
-      if (commonCtrl.isNull(this.passwordField.value())) {
-        this.nicknameField.errorMsg = 'Require a Password'
-      } else {
-        if (this.rePasswordField.value() !== '') {
-          this.passwordField.errorMsg = this.passwordField.value() === this.rePasswordField.value() ? '' : 'Enter a password, such as Re-Password.'
-        }
+function userForm() {
+  const userFormModel = {
+    nicknameField: {
+      type: 'text',
+      value: stream(''),
+      placeholder: 'Nickname',
+      errorMsg: '',
+      validate(): boolean {
+        let bool = commonCtrl.isNickname(this.value())
+        this.errorMsg = bool ?
+          UserForm.methods().isNicknameDuplicated(userFormModel.nicknameField.value()) ? '' : 'Already this nickname is registered.'
+          : 'Enter a 4~20 characters and Use digits and alphabets'
+        return this.errorMsg.length === 0
       }
-      return this.errorMsg.length === 0
-    }
-  },
-  rePasswordField: {
-    type: 'password',
-    value: stream(''),
-    placeholder: 'Re-Password',
-    errorMsg: '',
-    validate(): boolean {
-      if (commonCtrl.isNull(this.rePasswordField.value())) {
-        this.nicknameField.errorMsg = 'Require a Password'
-      } else {
-        if (this.passwordField.value() !== '') {
-          this.rePasswordField.errorMsg = this.rePasswordField.value() === this.passwordField.value() ? '' : 'Enter a Re-password, such as Password.'
-        }
+    },
+    emailField: {
+      type: 'email',
+      value: stream(''),
+      placeholder: 'Email ',
+      errorMsg: '',
+      validate(): boolean {
+        let bool = this.value().length < 1
+        this.errorMsg = bool ? 'Require a Email' : ''
+        return this.errorMsg.length === 0
       }
-      return this.errorMsg.length === 0
-    }
-  },
-  birthField: {
-    value: stream(''),
-    placeholder: 'Birth Day',
-    errorMsg: '',
-    validate(): boolean {
-      this.birthField.errorMsg = this.birthField.value().length > 5 ? 'Expected no more than 5 characters' : ''
-      return this.errorMsg.length === 0
-    }
-  },
-  genderField: {
-    type: 'radio',
-    name: 'gender',
-    value: stream(''),
-    placeholder: 'Gender',
-    errorMsg: '',
-    validate(): boolean {
-      let bool = commonCtrl.isNull(this.genderField.value())
-      this.genderField.errorMsg = bool ? '' : 'Require a Email'
-      return bool
-    }
-  },
+    },
+    passwordField: {
+      type: 'password',
+      value: stream(''),
+      placeholder: 'Password',
+      errorMsg: '',
+      validate(): boolean {
+        if (this.value().length < 1) {
+          this.errorMsg = 'Require a Password'
+        } else {
+          if (userFormModel.rePasswordField.value().length > 1) {
+            let isSame = this.value() === userFormModel.rePasswordField.value()
+            this.errorMsg = isSame ? '' : 'Enter a password, such as Re-Password.'
+            userFormModel.rePasswordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Password.'
+          }
+        }
+        return this.errorMsg.length === 0
+      }
+    },
+    rePasswordField: {
+      type: 'password',
+      value: stream(''),
+      placeholder: 'Re-Password',
+      errorMsg: '',
+      validate(): boolean {
+        if (this.value().length < 1) {
+          this.errorMsg = 'Require a Password'
+        } else {
+          if (userFormModel.passwordField.value().length > 1) {
+            let isSame = this.value() === userFormModel.passwordField.value()
+            this.errorMsg = isSame ? '' : 'Enter a password, such as Password.'
+            userFormModel.passwordField.errorMsg = isSame ? '' : 'Enter a Re-password, such as Re-Password.'
+          }
+        }
+        return this.errorMsg.length === 0
+      }
+    },
+    birthField: {
+      type: 'date',
+      value: stream(''),
+      placeholder: 'Birth Day',
+      errorMsg: '',
+      validate(): boolean {
+        let bool = this.value().length < 1
+        this.errorMsg = bool ? 'Require a Birth date' : ''
+        return this.errorMsg.length === 0
+      }
+    },
+    genderField: {
+      type: 'radio',
+      name: 'gender',
+      value: stream(''),
+      placeholder: 'Gender',
+      errorMsg: '',
+      validate(): boolean {
+        let bool = this.value().length < 1
+        this.errorMsg = bool ? 'Require a Gender' : ''
+        return this.errorMsg.length === 0
+      }
+    },
 
-  profileField: {
-    type: 'text',
-    value: stream(''),
-    placeholder: 'Profile',
-    errorMsg: '',
-    validate(): boolean {
-      let bool = commonCtrl.isNull(this.genderField.value())
-      this.genderField.errorMsg = bool ? '' : 'Require a Email'
-      return bool
-    }
-  },
+    descriptionField: {
+      type: 'text',
+      value: stream(''),
+      placeholder: 'Profile',
+      errorMsg: '',
+      validate(): boolean {
+        let bool = this.value().length < 1
+        this.errorMsg = bool ? 'Require a Profile' : ''
+        return this.errorMsg.length === 0
+      }
+    },
 
-  receiveInfoField: {
-    type: 'checkbox',
-    value: stream([]),
-    placeholder: 'Received Information',
-    errorMsg: '',
-    validate(): boolean {
-      let bool = commonCtrl.isNull(this.genderField.value())
-      this.genderField.errorMsg = bool ? '' : 'Require a Email'
-      return bool
+    receiveInfoField: {
+      type: 'checkbox',
+      value: stream([]),
+      placeholder: 'Received Information',
+      errorMsg: '',
+      validate(): boolean {
+        return true
+      }
     }
   }
+  return userFormModel
 }
 
-//--------------------------------------------
 export const UserForm = {
-  data() {
-    const user: Client = new Client
+  model: Function,
+  user: Client,
 
-    return {
-      'user': user
-    }
+  oninit() {
+    this.user = new Client()
+    this.model = userForm()
   },
 
-  methods(): Object {
-    const isNicknameDuplicated = function (nickname: string): boolean {
+  methods() {
+    const isNicknameDuplicated = (nickname: string): boolean => {
       let user = userModel.getFromStroage(nickname)
-      return user !== null
+      return user === null
+    }
+
+    const setModelDataIntoUser = (userFormModel): void => {
+      this.user.email = userFormModel.emailField.value()
+      this.user.nickname = userFormModel.nicknameField.value()
+      this.user.password = userFormModel.passwordField.value()
+      this.user.birth = userFormModel.birthField.value()
+      this.user.description = userFormModel.descriptionField.value()
+      this.user.gender = userFormModel.genderField.value()
+      this.user.receiveInfo = userFormModel.receiveInfoField.value()
     }
 
     return {
-      'isNicknameDuplicated': isNicknameDuplicated
+      'isNicknameDuplicated': isNicknameDuplicated,
+      'setModelDataIntoUser': setModelDataIntoUser
     }
   },
 
@@ -147,23 +165,23 @@ export const UserForm = {
           >
             <div class={'row'}>
               <div class={'col-sm-8 col-sm-offset-2'}>
-                {/* Email */}
-                <div class={'form-group'}>
-                  <label class={'label'}>
-                    Email
-                  </label>
-                  {
-                    commonFormCtrl.inputForm({field: userFormModel.emailField})
-                  }
-                </div>
-
                 {/* Nickname */}
                 <div class={'form-group'}>
                   <label class={'label'}>
                     Nickname
                   </label>
                   {
-                    commonFormCtrl.inputForm({field: userFormModel.nicknameField})
+                    commonFormCtrl.inputForm({field: this.model.nicknameField})
+                  }
+                </div>
+
+                {/* Email */}
+                <div class={'form-group'}>
+                  <label class={'label'}>
+                    Email
+                  </label>
+                  {
+                    commonFormCtrl.inputForm({field: this.model.emailField})
                   }
                 </div>
 
@@ -173,7 +191,7 @@ export const UserForm = {
                     Password
                   </label>
                   {
-                    commonFormCtrl.inputForm({field: userFormModel.passwordField})
+                    commonFormCtrl.inputForm({field: this.model.passwordField})
                   }
                 </div>
 
@@ -183,7 +201,7 @@ export const UserForm = {
                     Re-Password
                   </label>
                   {
-                    commonFormCtrl.inputForm({field: userFormModel.rePasswordField})
+                    commonFormCtrl.inputForm({field: this.model.rePasswordField})
                   }
                 </div>
 
@@ -193,7 +211,7 @@ export const UserForm = {
                     Birth
                   </label>
                   {
-                    commonFormCtrl.inputForm({field: userFormModel.birthField})
+                    commonFormCtrl.inputForm({field: this.model.birthField})
                   }
                 </div>
 
@@ -203,7 +221,7 @@ export const UserForm = {
                     Information
                   </label>
                   {
-                    commonFormCtrl.textAreaForm({field: userFormModel.profileField})
+                    commonFormCtrl.textAreaForm({field: this.model.descriptionField})
                   }
                 </div>
               </div>
@@ -219,10 +237,10 @@ export const UserForm = {
                 </label>
                 <div class="form-group">
                   {
-                    commonFormCtrl.checkboxForm({field: userFormModel.genderField}, 'Male')
+                    commonFormCtrl.radioForm({field: this.model.genderField}, 'Male')
                   }
                   {
-                    commonFormCtrl.checkboxForm({field: userFormModel.genderField}, 'Female')
+                    commonFormCtrl.radioForm({field: this.model.genderField}, 'Female')
                   }
                 </div>
               </div>
@@ -237,10 +255,10 @@ export const UserForm = {
                 </label>
                 <div class="form-group">
                   {
-                    commonFormCtrl.checkboxForm({field: userFormModel.receiveInfoField}, 'Phone')
+                    commonFormCtrl.checkboxForm({field: this.model.receiveInfoField}, 'Phone')
                   }
                   {
-                    commonFormCtrl.checkboxForm({field: userFormModel.receiveInfoField}, 'Email')
+                    commonFormCtrl.checkboxForm({field: this.model.receiveInfoField}, 'Email')
                   }
                 </div>
               </div>
@@ -255,8 +273,10 @@ export const UserForm = {
                   type={'button'}
                   onclick={(e: Event) => {
                     e.preventDefault()
-                    if (commonFormCtrl.validateAll(userFormModel)) {
-                      userModel.save(this.data().user)
+                    let bool = commonFormCtrl.validateAll(this.model)
+                    if (bool) {
+                      this.methods().setModelDataIntoUser(this.model)
+                      userModel.save(this.user)
                     }
                   }}
                 >
