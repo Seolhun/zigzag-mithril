@@ -27,7 +27,7 @@
 - 결과
   - 실행에 옮겨 이와 같은 프로젝트 결과를 얻을 수 있었습니다.
   - 개발서버 및 빌드까지 완료하였습니다.
-  - S3간단히 배포하여봤습니다.[AWS - S3 테스트](https://s3.ap-northeast-2.amazonaws.com/hi-cord/index.html#!)
+  - S3간단히 배포하여봤습니다.[AWS - S3 테스트](https://s3.ap-northeast-2.amazonaws.com/mithril-test-seolhun/index.html#!/)
   - summary 폴더에 간단한 것을 정리했습니다. 작업양을 늘리다보니, 필요한 문서화를 더 못한 것이 아쉽습니다
 
 - BootStrap을 CDN으로 사용하였고, NavBar로 인해 JQuery를 CDN으로 넣었기만 하고 사용하지는 않았습니다
