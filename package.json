@@ -14,7 +14,7 @@
     "test": "npm run unit && npm run e2e"
   },
   "dependencies": {
-    "mithril": "^1.1.6"
+    "mithril": "^1.1.7"
   },
   "devDependencies": {
     "@types/mithril": "^1.1.12",
